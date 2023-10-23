@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TestDesigner
+namespace TestDesigner.Answer
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for TextAnswerView.xaml
     /// </summary>
-    public partial class MainWindow : UserControl
+    public partial class TextAnswerView : UserControl
     {
-        public MainWindow()
+        public TextAnswerView()
         {
             InitializeComponent();
         }

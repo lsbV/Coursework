@@ -1,54 +1,68 @@
-﻿using System;
-using System.Collections;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Input;
+using TestDesigner.Task;
 using TestDesigner.ViewLib;
-using TestLib;
+using TestLib.Interfaces;
 
 namespace TestDesigner
 {
-    public class MainWindowViewModel : BaseViewModel
+    public partial class MainWindowViewModel : BaseViewModel
     {
         #region Fields
-        private string _title = "Test Designer";
-        private ICollection<IAnswer> answers;
+        [ObservableProperty] private string title;
+        [ObservableProperty] private string author;
+        [ObservableProperty] private string description;
+        [ObservableProperty] private string infoForTestTaker;
+        [ObservableProperty] private int countOfTasks;
+        [ObservableProperty] private double maxPoints;
+        [ObservableProperty] private double minPoints;
+
+        [ObservableProperty] private ICollection<IAnswer> answers;
+        [ObservableProperty] private ICollection<ITask> tasks;
+        [ObservableProperty] private ITask selectedTask;
+        [ObservableProperty] private IAnswer selectedAnswer;
+
+        private ApplicationViewModel.ApplicationController controller;
         #endregion Fields
 
         #region Properties
-        public string Title
-        {
-            get => _title;
-            set
-            {
-                _title = value;
-                OnPropertyChanged(nameof(Title));
-            }
-        }
-        public ICollection<ITask> Tasks { get; private set; }
-        public ITask SelectedTask { get; set; }
-        public ICollection<IAnswer> Answers { get => answers; private set => answers = value; }
 
         #endregion Properties
 
         #region Commands
+        [RelayCommand] private void AddTask()
+        {
+            controller.ChangeView(new TaskCreatorViewModel(controller));
+        }
+        [ObservableProperty] private ICommand deleteTaskCommand;
+        [ObservableProperty] private ICommand addAnswerCommand;
+        [ObservableProperty] private ICommand deleteAnswerCommand;
+        [ObservableProperty] private ICommand saveTestCommand;
+        [ObservableProperty] private ICommand loadTestCommand;
         #endregion Commands
 
         #region Constructors
-        public MainWindowViewModel()
-        {
-            Tasks = new ObservableCollection<ITask>();
-            
+        public MainWindowViewModel(ApplicationViewModel.ApplicationController controller)
+        {   
+            this.controller = controller;
+            //Tasks = new ObservableCollection<ITask>()
+            //{
+            //    new ChooseFromListTask(){Text = "Choose from list", Point = 1, Answers = new List<IAnswer>(){new TextAnswer() { Text = "Answer 1"}, new TextAnswer() { Text = "Answer 2"}}},
+            //};
+            //JsonSerializerSettings settings = new JsonSerializerSettings
+            //{
+            //    TypeNameHandling = TypeNameHandling.All
+            //};
+            //string json = JsonConvert.SerializeObject(Tasks, settings);
+            //var res = JsonConvert.DeserializeObject<ICollection<ITask>>(json,settings);
+            //MessageBox.Show(res.First().Body.Text);
         }
         #endregion Constructors
 
         #region Methods
-        protected override void OnDispose()
-        {
-            throw new NotImplementedException();
-        }
+        
         #endregion Methods
     }
 }

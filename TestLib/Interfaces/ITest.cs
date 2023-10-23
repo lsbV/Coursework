@@ -1,4 +1,4 @@
-﻿namespace TestLib
+﻿namespace TestLib.Interfaces
 {
     public interface ITest
     {

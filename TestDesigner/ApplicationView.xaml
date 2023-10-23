@@ -1,0 +1,22 @@
+﻿<Window x:Class="TestDesigner.ApplicationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TestDesigner"
+             xmlns:task="clr-namespace:TestDesigner.Task"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:ApplicationViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:MainWindowViewModel}">
+            <local:MainWindow/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type task:TaskCreatorViewModel}">
+            <task:TaskCreatorView/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <UserControl Content="{Binding Current}"/>
+    </Grid>
+</Window>

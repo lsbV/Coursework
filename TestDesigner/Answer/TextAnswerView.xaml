@@ -7,7 +7,12 @@
              d:DataContext="{d:DesignInstance Type=local:TextAnswerViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <DockPanel LastChildFill="True">
+        <CheckBox DockPanel.Dock="Right" IsChecked="{Binding IsCorrect}" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <CheckBox.LayoutTransform>
+                <ScaleTransform ScaleX="2" ScaleY="2" />
+            </CheckBox.LayoutTransform>
+        </CheckBox>
         <TextBox Text="{Binding Text}" />
-    </Grid>
+    </DockPanel>
 </UserControl>

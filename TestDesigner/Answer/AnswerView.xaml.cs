@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TestDesigner.Task
+namespace TestDesigner.Answer
 {
     /// <summary>
-    /// Interaction logic for TaskCreatorViewModel.xaml
+    /// Interaction logic for AnswerView.xaml
     /// </summary>
-    public partial class TaskCreatorView : UserControl
+    public partial class AnswerView : UserControl
     {
-        public TaskCreatorView()
+        public AnswerView()
         {
             InitializeComponent();
         }

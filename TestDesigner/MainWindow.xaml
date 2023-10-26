@@ -13,18 +13,31 @@
                 <Setter Property="Margin" Value="5"/>
             </Style>
         </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Content="Add task" Command="{Binding CreateEditTaskCommand}" Width="100"/>
+            <Button Content="Save test" Command="{Binding SaveTestCommand}" Width="100"/>
+            <Button Content="Load test" Command="{Binding LoadTestCommand}" Width="100"/>
+            
+        </StackPanel>
+
+        <StackPanel Grid.Column="0" Grid.Row="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Title" Grid.Column="0" />
-                <xceed:WatermarkTextBox Text="Enter test title" Grid.Column="1" />
+                <xceed:WatermarkTextBox Text="{Binding Title}" Watermark="Enter test title" Grid.Column="1" />
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -32,7 +45,7 @@
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Author" Grid.Column="0" />
-                <xceed:WatermarkTextBox Text="Enter your name" Grid.Column="1" />
+                <xceed:WatermarkTextBox Text="{Binding Author}" Watermark="Enter your name" Grid.Column="1" />
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -40,7 +53,7 @@
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Description" Grid.Column="0" />
-                <xceed:WatermarkTextBox Text="Enter description" Grid.Column="1" TextWrapping="Wrap" Height="100"/>
+                <xceed:WatermarkTextBox Text="{Binding Description}" Watermark="Enter description" Grid.Column="1" TextWrapping="Wrap" Height="100"/>
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -48,7 +61,7 @@
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Info for tast taker" Grid.Column="0" />
-                <xceed:WatermarkTextBox Text="Enter your name" Grid.Column="1" TextWrapping="Wrap" Height="100"/>
+                <xceed:WatermarkTextBox Text="{Binding InfoForTestTaker}" Watermark="Enter your name" Grid.Column="1" TextWrapping="Wrap" Height="100"/>
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -72,10 +85,10 @@
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Minimum passing percent" Grid.Column="0" />
-                <xceed:UIntegerUpDown Grid.Column="1"/>
+                <xceed:UIntegerUpDown Grid.Column="1" Value="{Binding CountOfTasks}"/>
             </Grid>
         </StackPanel>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="AUTO"/>
                 <RowDefinition/>
@@ -84,7 +97,7 @@
             <Grid.Resources>
                 <Style TargetType="DataGrid">
                     <Setter Property="Margin" Value="5"/>
-                    <Setter Property="IsReadOnly" Value="True"/>
+                    <Setter Property="AutoGenerateColumns" Value="False"/>
                     <Setter Property="CanUserAddRows" Value="False"/>
                     <Setter Property="CanUserDeleteRows" Value="False"/>
                     <Setter Property="CanUserReorderColumns" Value="False"/>
@@ -92,17 +105,13 @@
                 <Style TargetType="Button" >
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-            </Grid.Resources>
-
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Add task" Command="{Binding AddTaskCommand}" Width="100"/>
-                <Button Content="Add answer" Command="{Binding AddAnswerCommand}" Width="100"/>
-            </StackPanel>
+            </Grid.Resources>           
             
             <DataGrid ItemsSource="{Binding Tasks}" Grid.Row="1" SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn  Header="Text" Width="*" Binding="{Binding Text}"/>
+                    <DataGridTextColumn  Header="Description" Width="*" Binding="{Binding Body.Text}"/>
                     <DataGridTextColumn Header="Point" Binding="{Binding Point}"/>
+                    <DataGridTextColumn Header="Answer count" Binding="{Binding Answers.Count}"/>
                 </DataGrid.Columns>
             </DataGrid>
 

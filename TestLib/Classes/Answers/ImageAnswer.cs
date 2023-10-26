@@ -28,5 +28,10 @@ namespace TestLib.Classes.Answers
                 return false;
             }
         }
+
+        public object Clone()
+        {
+            return new ImageAnswer(IsCorrect, Text, (Image)Image.Clone());
+        }
     }
 }

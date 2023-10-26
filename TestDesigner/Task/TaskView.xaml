@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="TestDesigner.Task.TaskView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:TestDesigner.Task"
+             xmlns:body="clr-namespace:TestDesigner.Body"
+             xmlns:answer="clr-namespace:TestDesigner.Answer"
+             xmlns:chooseFromList="clr-namespace:TestDesigner.Task.ChooseFromList"
+             d:DataContext="{d:DesignInstance Type=local:TaskViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type chooseFromList:ChooseFromListTaskViewModel}">
+            <chooseFromList:ChooseFromListTaskView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type body:BodyCreatorViewModel}">
+            <body:BodyCreatorView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type answer:AnswerViewModel}">
+            <answer:AnswerView/>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="7*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Task type: " Grid.Column="0"/>
+                <ComboBox ItemsSource="{Binding TaskTypes}" SelectedItem="{Binding SelectedTaskType}" DisplayMemberPath="Name" Grid.Column="1"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="7*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Description" Grid.Column="0"/>
+                <xceed:WatermarkTextBox Text="{Binding Description}" Watermark="Enter a description" Grid.Column="1"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="7*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Point" Grid.Row="1" Grid.Column="0"/>
+                <xceed:WatermarkTextBox Text="{Binding Point}" Watermark="Enter a grade for the task" Grid.Row="1" Grid.Column="1"/>
+            </Grid>
+
+            <UserControl Content="{Binding Body}" Grid.Row="3"/>
+
+            <UserControl Content="{Binding Answer}" Grid.Row="4"/>
+
+            <UserControl Content="{Binding SelectedTaskType}" Grid.Row="5"/>
+
+            <Button Content="Add answer" Grid.Row="6" Command="{Binding AddAnswerCommand}"/>
+
+            <Grid Grid.Row="7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Cancel" Command="{Binding CancelCommand}" />
+                <Button Content="Save" Command="{Binding SaveCommand}" Grid.Column="1"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

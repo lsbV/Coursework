@@ -6,35 +6,49 @@ using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
 using TestDesigner;
+using TestLib.Interfaces;
 
 namespace TestDesigner
 {
     public partial class ApplicationViewModel : BaseViewModel
     {
-        BaseViewModel main;
-        [ObservableProperty] BaseViewModel current;
-        ApplicationController controller;
+        private MainWindowViewModel main;
+        private ApplicationController controller;
+        [ObservableProperty] private BaseViewModel current;
         public ApplicationViewModel()
         {
-            controller = new ApplicationController(this);
             Name = "Application";
-            main = new MainWindowViewModel(controller);
+            main = new MainWindowViewModel();
             current = main;
+            controller = new ApplicationController(this, main);
+            main.Controller = controller;
         }
         public class ApplicationController
         {
-            ApplicationViewModel model;
+            private ApplicationViewModel app;
+            private MainWindowViewModel main;
 
-            public ApplicationController(ApplicationViewModel model)
+            public ApplicationController(ApplicationViewModel app, MainWindowViewModel main)
             {
-                this.model = model;
+                this.app = app;
+                this.main = main;
             }
 
             public void ChangeView(BaseViewModel view)
             {
                 if (view == null)
                     throw new ArgumentNullException(nameof(view));
-                model.Current = view;
+                app.Current = view;
+            }
+            public void AddTask(ITask task)
+            {
+                if (task == null)
+                    throw new ArgumentNullException(nameof(task));
+                main.Tasks.Add(task);
+            }
+            public void SetDefoultView()
+            {
+                app.Current = main;
             }
         }
     }

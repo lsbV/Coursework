@@ -13,9 +13,13 @@ namespace TestLib.Classes.Tasks
         public ITaskBody Body { get; set; }
         public double Point { get; set; }
         public ICollection<IAnswer> Answers { get; set; }
-        public ICollection<IAnswer> CorrectAnswers { get; set; }
 
         public bool CheckAnswers(ICollection<IAnswer> answers)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Clone()
         {
             throw new NotImplementedException();
         }

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace TestLib.Interfaces
 {
-    public interface ITaskBody : ICloneable
+    public interface IUserAnswer
     {
-        public string? Text { get; set; }
+        public int Id { get; set; }
+        public IUserTest UserTest { get; set; }
+        public IAnswer Answer { get; set; }
     }
 }

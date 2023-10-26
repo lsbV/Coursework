@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace TestLib.Interfaces
 {
-    public interface ITaskBody : ICloneable
+    public interface IUserGroup
     {
-        public string? Text { get; set; }
+        public int UserId { get; set; }
+        public int GroupId { get; set; }
     }
 }

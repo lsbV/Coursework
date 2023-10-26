@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestLib.Interfaces
+namespace TestDesigner.Infrastructure
 {
-    public interface ITaskBody : ICloneable
+    public enum WorkMode
     {
-        public string? Text { get; set; }
+        Create,
+        Edit
     }
 }

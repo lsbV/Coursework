@@ -14,5 +14,10 @@ namespace TestLib.Classes.Bodies
         public TextTaskBody()
         {
         }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

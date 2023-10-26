@@ -18,8 +18,4 @@
     <ProjectReference Include="..\TestLib\TestLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Body\" />
-  </ItemGroup>
-
 </Project>

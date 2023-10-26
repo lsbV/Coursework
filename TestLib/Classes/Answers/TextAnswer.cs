@@ -7,16 +7,15 @@ namespace TestLib.Classes.Answers
         public bool IsCorrect { get; set; }
         public string Text { get; set; }
 
-        public bool Equals(IAnswer answer)
+        public TextAnswer(bool isCorrect, string text)
         {
-            if (answer is TextAnswer textAnswer)
-            {
-                return Text == textAnswer.Text;
-            }
-            else
-            {
-                return false;
-            }
+            IsCorrect = isCorrect;
+            Text = text;
+        }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

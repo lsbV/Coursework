@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestLib.Interfaces
+namespace TestLib.Enum
 {
-    public interface ITaskBody : ICloneable
+    public enum UserRole
     {
-        public string? Text { get; set; }
+        Admin,
+        User,
+        Guest
     }
 }

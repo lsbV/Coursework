@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Answer
 {
@@ -16,6 +16,6 @@ namespace TestDesigner.Answer
 
         public abstract object Clone();
 
-        public abstract IAnswer CreateAnswer();
+        public abstract TestLib.Abstractions.Answer CreateAnswer();
     }
 }

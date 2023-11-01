@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DALTestsDB;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Windows.Input;
 using TestDesigner.Infrastructure;
 using TestDesigner.Task;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 using Xceed.Wpf.Toolkit;
 
 namespace TestDesigner
@@ -24,10 +25,10 @@ namespace TestDesigner
         [ObservableProperty] private double maxPoints;
         [ObservableProperty] private double minPoints;
 
-        [ObservableProperty] private ObservableCollection<IAnswer> answers;
-        [ObservableProperty] private ObservableCollection<ITask> tasks;
-        [ObservableProperty] private ITask selectedTask;
-        [ObservableProperty] private IAnswer selectedAnswer;
+        [ObservableProperty] private ObservableCollection<TestLib.Abstractions.Answer> answers;
+        [ObservableProperty] private ObservableCollection<TestLib.Abstractions.Task> tasks;
+        [ObservableProperty] private TestLib.Abstractions.Task selectedTask;
+        [ObservableProperty] private TestLib.Abstractions.Answer selectedAnswer;
         #endregion Fields
 
         #region Properties
@@ -37,9 +38,9 @@ namespace TestDesigner
 
         #region Constructors
         public MainWindowViewModel()
-        {   
-            Answers = new ObservableCollection<IAnswer>();
-            Tasks = new ObservableCollection<ITask>();
+        {
+            Answers = new ObservableCollection<TestLib.Abstractions.Answer>();
+            Tasks = new ObservableCollection<TestLib.Abstractions.Task>();
             FileExplorerProvider = new FileExplorer();
             Answers.CollectionChanged += ((s,e) =>  Recount());
         }
@@ -53,15 +54,14 @@ namespace TestDesigner
         [ObservableProperty] private ICommand deleteTaskCommand;
         [RelayCommand] private void SaveTest()
         {
-            ITest test = new TestLib.Classes.Test.Test()
+            Test test = new Test()
             {
                 Title = Title,
                 Author = Author,
                 Description = Description,
                 InfoForTestTaker = InfoForTestTaker,
                 Tasks = Tasks.ToArray(),
-                MinPoints = MinPoints,
-                MaxPoints = MaxPoints
+                PassingPercent = MinPoints
             };
             var isSaved = FileExplorerProvider.SaveFile(test, path);
             if (isSaved)
@@ -87,9 +87,8 @@ namespace TestDesigner
                         Author = test.Author;
                         Description = test.Description;
                         InfoForTestTaker = test.InfoForTestTaker;
-                        Tasks = new ObservableCollection<ITask>(test.Tasks);
-                        MinPoints = test.MinPoints;
-                        MaxPoints = test.MaxPoints;
+                        Tasks = new ObservableCollection<TestLib.Abstractions.Task>(test.Tasks);
+                        MinPoints = test.PassingPercent;
                         Recount();
                     }
                 }
@@ -110,7 +109,7 @@ namespace TestDesigner
             foreach (var item in Tasks) { max += item.Point; }
             MaxPoints = max;
         }
-        partial void OnSelectedTaskChanged(ITask value)
+        partial void OnSelectedTaskChanged(TestLib.Abstractions.Task value)
         {
             Answers = new(SelectedTask.Answers);
         }

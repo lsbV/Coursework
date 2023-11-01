@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Server.Pages.Groups;
+using Server.Pages.Tests;
+using Server.Pages.TestsAssigned;
 using Server.Pages.Users;
-using SharpRepository.EfRepository;
-using SharpRepository.Repository;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Pages.Application
 {
@@ -16,13 +18,25 @@ namespace Server.Pages.Application
 
         ApplicationController controller;
         public ApplicationViewModel()
-        {
-            
+        {            
             Name = "Application";
             pages = new List<BaseViewModel>();
             controller = new ApplicationController(this);
+            pages.Add(new AllUsersViewModel());
+            pages.Add(new AllGroupsViewModel());
+            pages.Add(new AllTestsViewModel());
+            pages.Add(new TestsAssignedViewModel());
             current = pages.First();
         }
+
+        partial void OnCurrentChanged(BaseViewModel viewModel)
+        {
+            if(viewModel is IUpdateable updateable)
+            {
+                Task.Run(updateable.UpdateAsynk);
+            }
+        }
+
         public class ApplicationController
         {
             ApplicationViewModel model;

@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Server.Pages.Users.AllUsersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Server.Pages.Users"
+             d:DataContext="{d:DesignInstance Type=local:AllUsersViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <DataGrid ItemsSource="{Binding Users}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="First name" Binding="{Binding FirstName}"/>
+                <DataGridTextColumn Header="Last name" Binding="{Binding LastName}"/>
+                <DataGridTextColumn Header="Login" Binding="{Binding  Login}"/>
+                <DataGridTextColumn Header="Role" Binding="{Binding Role}"/>
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}"/>
+                <DataGridTextColumn Header="Created date" Binding="{Binding CreatedAt}"/>
+                <DataGridTemplateColumn Header="Control">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Edit" Command="{Binding EditCommand}"/>
+                                <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>   
+    </Grid>
+</UserControl>

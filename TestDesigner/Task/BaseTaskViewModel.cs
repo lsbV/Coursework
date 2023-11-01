@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.Infrastructure;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Task
 {
@@ -14,16 +14,16 @@ namespace TestDesigner.Task
     {
         [ObservableProperty] private string description;
         [ObservableProperty] private double point;
-        [ObservableProperty] private ICollection<IAnswer> answers;
+        [ObservableProperty] private ICollection<TestLib.Abstractions.Answer> answers;
         //[ObservableProperty] private ICollection<IAnswer> correctAnswers;
-        [ObservableProperty] private ITaskBody body;
+        [ObservableProperty] private TaskBody body;
         protected WorkMode workMode;
 
         //public BaseTaskViewModel()
         //{
         //    workMode = WorkMode.Create;
         //}
-        public BaseTaskViewModel(ITask task)
+        public BaseTaskViewModel(TestLib.Abstractions.Task task)
         {
             workMode = WorkMode.Edit;
             Description = task.Description;
@@ -33,6 +33,6 @@ namespace TestDesigner.Task
             Body = task.Body;
         }
 
-        public abstract ITask CreateTask();
+        public abstract TestLib.Abstractions.Task CreateTask();
     }
 }

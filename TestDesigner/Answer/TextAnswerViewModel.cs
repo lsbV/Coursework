@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
 using TestLib.Classes.Answers;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Answer
 {
@@ -22,7 +22,7 @@ namespace TestDesigner.Answer
             return MemberwiseClone();
         }
 
-        public override IAnswer CreateAnswer()
+        public override TestLib.Abstractions.Answer CreateAnswer()
         {
             return new TextAnswer(IsCorrect, Text);
         }

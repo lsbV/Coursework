@@ -1,21 +1,18 @@
-﻿using TestLib.Interfaces;
+﻿using TestLib.Abstractions;
 
 namespace TestLib.Classes.Bodies
 {
-    public class TextTaskBody : ITaskBody
+    public class TextTaskBody : TaskBody
     {
-        public string? Text { get; set; } = string.Empty;
-
         public TextTaskBody(string? text)
         {
             Text = text;
         }
-
         public TextTaskBody()
         {
+            Text = string.Empty;
         }
-
-        public object Clone()
+        public override object Clone()
         {
             return MemberwiseClone();
         }

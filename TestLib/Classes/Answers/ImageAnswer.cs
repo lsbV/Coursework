@@ -1,13 +1,10 @@
 ﻿using System.Drawing;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestLib.Classes.Answers
 {
-    public class ImageAnswer : IAnswer
+    public class ImageAnswer : Answer
     {
-        private string imageName;
-        public bool IsCorrect { get; set; }
-        public string Text { get => imageName; set => imageName = value; }
         public Image Image { get; set; }
 
         public ImageAnswer(bool isCorrect, string text, Image image)
@@ -17,19 +14,7 @@ namespace TestLib.Classes.Answers
             Image = image;
         }
 
-        public bool Equals(IAnswer answer)
-        {
-            if (answer is ImageAnswer imageAnswer)
-            {
-                return Text == imageAnswer.Text && Image.Equals(imageAnswer.imageName);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public object Clone()
+        public override object Clone()
         {
             return new ImageAnswer(IsCorrect, Text, (Image)Image.Clone());
         }

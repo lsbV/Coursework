@@ -5,7 +5,7 @@ using System.Windows.Input;
 using TestDesigner.Answer;
 using TestDesigner.Infrastructure;
 using TestLib.Classes.Tasks;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Task.ChooseFromList
 {
@@ -15,12 +15,12 @@ namespace TestDesigner.Task.ChooseFromList
         {
             workMode = WorkMode.Create;            
         }
-        public ChooseFromListTaskViewModel(ITask task) : base(task) 
+        public ChooseFromListTaskViewModel(TestLib.Abstractions.Task task) : base(task) 
         {
             Name = "Choose from list";
             Description = "Choose from list";
         }
-        public override ITask CreateTask()
+        public override TestLib.Abstractions.Task CreateTask()
         {
             return new ChooseFromListTask(Description, Point, Answers,  Body);
         }

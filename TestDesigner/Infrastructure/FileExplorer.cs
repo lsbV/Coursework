@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using DALTestsDB;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,13 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Infrastructure
 {
     public class FileExplorer : IFileExplorerProvider
     {
-        public ITest OpenFile(string path)
+        public Test OpenFile(string path)
         {
             if(path == null)
             {
@@ -25,7 +26,7 @@ namespace TestDesigner.Infrastructure
                 {
                     var json = File.ReadAllText(path);
                     var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented };
-                    var task = JsonConvert.DeserializeObject<ITest>(json, jsonSettings);
+                    var task = JsonConvert.DeserializeObject<Test>(json, jsonSettings);
                     if (task == null) throw new ArgumentException("Invalid file");
                     return task;
                 }
@@ -54,7 +55,7 @@ namespace TestDesigner.Infrastructure
             }
         }
 
-        public bool SaveFile(ITest test, string path = default)
+        public bool SaveFile(Test test, string path = default)
         {            
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented };
             var json = JsonConvert.SerializeObject(test, jsonSettings);

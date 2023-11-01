@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Body
 {
@@ -22,7 +22,7 @@ namespace TestDesigner.Body
             };
             SelectedViewModel = BodyTypes.First();
         }
-        public ITaskBody CreateBody()
+        public TaskBody CreateBody()
         {
             return SelectedViewModel.CreateBody();
         }

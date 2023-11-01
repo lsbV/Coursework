@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Answer
 {
@@ -34,7 +34,7 @@ namespace TestDesigner.Answer
         #endregion Commands
 
         #region Methods
-        public IAnswer CreateAnswer()
+        public TestLib.Abstractions.Answer CreateAnswer()
         {
             return SelectedAnswerType.CreateAnswer();
         }

@@ -1,11 +1,12 @@
-﻿using TestLib.Interfaces;
+﻿using DALTestsDB;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Infrastructure
 {
     public interface IFileExplorerProvider
     {
-        public ITest OpenFile(string path);
-        public bool SaveFile(ITest test, string path);
+        public Test OpenFile(string path);
+        public bool SaveFile(Test test, string path);
         public string OpenFileDialog();
     }
 }

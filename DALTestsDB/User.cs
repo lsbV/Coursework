@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestLib.Enum;
-using TestLib.Interfaces;
+﻿using TestLib.Interfaces;
 
-namespace Server.Pages.Users
+namespace DALTestsDB
 {
-    public class User : IUser
+    public class User 
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -16,8 +10,9 @@ namespace Server.Pages.Users
         public UserRole Role { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public bool IsArchived { get; set; }
         public DateTime CreatedAt { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
     }
 }

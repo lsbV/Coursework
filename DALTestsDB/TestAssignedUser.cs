@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestLib.Interfaces
+namespace DALTestsDB
 {
-    public interface IUserAnswer
+    public class TestAssignedUser
     {
         public int Id { get; set; }
-        public IUserTest UserTest { get; set; }
-        public IAnswer Answer { get; set; }
+        public TestAssigned TestAssigned { get; set; }
+        public User User { get; set; }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System.Drawing;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestLib.Classes.Bodies
 {
-    public class ImageTaskBody : ITaskBody
+    public class ImageTaskBody : TaskBody
     {
-        public string? Text { get; set; }
-        public Bitmap Image { get; set; }
-
-        public object Clone()
+        public Bitmap Image { get; set; }        
+        public override object Clone()
         {
             return new ImageTaskBody
             {

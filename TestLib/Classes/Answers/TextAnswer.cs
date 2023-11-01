@@ -1,21 +1,17 @@
-﻿using TestLib.Interfaces;
-
+﻿using TestLib.Abstractions;
 namespace TestLib.Classes.Answers
 {
-    public class TextAnswer : IAnswer
-    {
-        public bool IsCorrect { get; set; }
-        public string Text { get; set; }
-
+    public class TextAnswer : Answer
+    { 
         public TextAnswer(bool isCorrect, string text)
         {
             IsCorrect = isCorrect;
             Text = text;
         }
 
-        public object Clone()
+        public override object Clone()
         {
-            throw new NotImplementedException();
+            return MemberwiseClone();
         }
     }
 }

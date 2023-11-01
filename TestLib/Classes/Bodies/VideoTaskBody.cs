@@ -1,13 +1,10 @@
-﻿using System.Net.Http.Headers;
-using TestLib.Interfaces;
+﻿using TestLib.Abstractions;
 
 namespace TestLib.Classes.Bodies
 {
-    public class VideoTaskBody : ITaskBody
+    public class VideoTaskBody : TaskBody
     {
-        public string? Text { get; set; } = string.Empty;
-
-        public object Clone()
+        public override object Clone()
         {
             throw new NotImplementedException();
         }

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestLib.Interfaces
+namespace Server.Pages
 {
-    public interface ITaskBody : ICloneable
+    public enum ViewMode
     {
-        public string? Text { get; set; }
+        View,
+        Edit,
+        Create
     }
 }

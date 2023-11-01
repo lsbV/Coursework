@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 using CommunityToolkit.Mvvm.Input;
 using TestDesigner.Body;
 using TestDesigner.Task.ChooseFromList;

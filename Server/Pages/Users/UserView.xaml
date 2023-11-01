@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Server.Pages.Users.UserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Server.Pages.Users"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=local:UserViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <xceed:WatermarkTextBox Watermark="First name" Text="{Binding FirstName}" Grid.Row="0"/>
+        <xceed:WatermarkTextBox Watermark="Last name" Text="{Binding LastName}" Grid.Row="1"/>
+        <xceed:WatermarkTextBox Watermark="Login" Text="{Binding Login}" Grid.Row="2"/>
+        <xceed:WatermarkTextBox Watermark="Password" Text="{Binding Password}" Grid.Row="3"/>
+        <xceed:WatermarkTextBox Watermark="Description" Text="{Binding Description}" Grid.Row="4"/>
+        <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding Role}" Grid.Row="5"/>
+        <DockPanel Grid.Row="6" LastChildFill="True">
+            <CheckBox IsChecked="{Binding IsArchived}" DockPanel.Dock="Right" VerticalContentAlignment="Center">
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2" />
+                </CheckBox.LayoutTransform>
+            </CheckBox>
+            <Label DockPanel.Dock="Left" Content="Archived"/>
+        </DockPanel>
+        <DatePicker SelectedDate="{Binding CreatedAt}" Grid.Row="7"/>
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Save" Command="{Binding SaveCommand}" Grid.Column="0"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</UserControl>

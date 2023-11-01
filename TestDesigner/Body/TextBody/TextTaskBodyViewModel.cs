@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TestDesigner.ViewLib;
 using TestLib.Classes.Bodies;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Body
 {
@@ -23,7 +23,7 @@ namespace TestDesigner.Body
             Name = "Text body";
         }
 
-        public override ITaskBody CreateBody()
+        public override TaskBody CreateBody()
         {
             return new TextTaskBody(Text);
         }

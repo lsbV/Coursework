@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
 using TestDesigner;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner
 {
@@ -40,7 +40,7 @@ namespace TestDesigner
                     throw new ArgumentNullException(nameof(view));
                 app.Current = view;
             }
-            public void AddTask(ITask task)
+            public void AddTask(TestLib.Abstractions.Task task)
             {
                 if (task == null)
                     throw new ArgumentNullException(nameof(task));

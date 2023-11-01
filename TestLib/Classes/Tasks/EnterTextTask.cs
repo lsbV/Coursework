@@ -1,25 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestLib.Interfaces;
+﻿using TestLib.Abstractions;
+using Task = TestLib.Abstractions.Task;
 
 namespace TestLib.Classes.Tasks
 {
-    public class EnterTextTask : ITask
-    {
+    public class EnterTextTask : Task 
+    { 
         public string Description { get; set; }
-        public ITaskBody Body { get; set; }
+        public TaskBody Body { get; set; }
         public double Point { get; set; }
-        public ICollection<IAnswer> Answers { get; set; }
-
-        public bool CheckAnswers(ICollection<IAnswer> answers)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object Clone()
+        public ICollection<Answer> Answers { get; set; }
+        public override bool CheckAnswers(ICollection<Answer> answers)
         {
             throw new NotImplementedException();
         }

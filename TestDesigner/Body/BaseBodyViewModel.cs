@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestDesigner.ViewLib;
-using TestLib.Interfaces;
+using TestLib.Abstractions;
 
 namespace TestDesigner.Body
 {
     public abstract class BaseBodyViewModel : BaseViewModel
     {
-        public abstract ITaskBody CreateBody();
+        public abstract TaskBody CreateBody();
         public BaseBodyViewModel() { }
     }
 }

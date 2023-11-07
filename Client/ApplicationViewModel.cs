@@ -18,7 +18,7 @@ namespace Client
         public ApplicationViewModel()
         {
             controller = new ApplicationController(this);
-            Name = "Application";
+            ViewName = "Application";
             main = new MainViewModel(controller);
             current = main;
         }

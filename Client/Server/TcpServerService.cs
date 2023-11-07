@@ -8,7 +8,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TestLib.Interfaces;
 
 namespace Client.Server
 {
@@ -50,8 +49,8 @@ namespace Client.Server
                     var data = await streamReader.ReadToEndAsync();
                     throw new NotImplementedException();
                     var settings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
-                    ITest test = JsonConvert.DeserializeObject<ITest>(data, settings);
-                    IAnswerParser
+                    //ITest test = JsonConvert.DeserializeObject<ITest>(data, settings);
+                    //IAnswerParser
                 }
                 
 

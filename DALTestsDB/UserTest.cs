@@ -1,6 +1,4 @@
-﻿using DALTestsDB;
-
-namespace DALTestsDB
+﻿namespace DALTestsDB
 {
     public class UserTest
     {

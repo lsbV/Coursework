@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DALTestsDB;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +8,7 @@ using TestDesigner.Infrastructure;
 using TestDesigner.Task;
 using TestDesigner.ViewLib;
 using TestLib.Abstractions;
+using TestLib.Classes.Test;
 using Xceed.Wpf.Toolkit;
 
 namespace TestDesigner
@@ -80,7 +80,7 @@ namespace TestDesigner
             {
                 try
                 {
-                    var test = FileExplorerProvider.OpenFile(path);
+                    var test = FileExplorerProvider.OpenFile<Test>(path);
                     if (test != null)
                     {
                         Title = test.Title;

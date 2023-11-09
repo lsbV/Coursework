@@ -3,7 +3,7 @@ using TestLib.Abstractions;
 
 namespace TestLib.Classes.Bodies
 {
-    public class ImageTaskBody : TaskBody
+    public class ImageTaskBody : Body
     {
         public Bitmap Image { get; set; }        
         public override object Clone()

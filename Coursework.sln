@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DALTestsDB", "DALTestsDB\DALTestsDB.csproj", "{56E0FC32-AADF-4B9A-9F08-63689EF65608}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{56E0FC32-AADF-4B9A-9F08-63689EF65608}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56E0FC32-AADF-4B9A-9F08-63689EF65608}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56E0FC32-AADF-4B9A-9F08-63689EF65608}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

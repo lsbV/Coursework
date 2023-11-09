@@ -1,7 +1,7 @@
 ﻿using TestLib.Abstractions;
 using Task = TestLib.Abstractions.Task;
 
-namespace DALTestsDB
+namespace TestLib.Classes.Test
 {
     public class Test
     {

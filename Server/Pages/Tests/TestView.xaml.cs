@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Server.Pages.TestsAssigned
+namespace Server.Pages.Tests
 {
     /// <summary>
-    /// Interaction logic for TestsAssignedView.xaml
+    /// Interaction logic for TestView.xaml
     /// </summary>
-    public partial class TestsAssignedView : UserControl
+    public partial class TestView : UserControl
     {
-        public TestsAssignedView()
+        public TestView()
         {
             InitializeComponent();
         }

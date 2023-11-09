@@ -4,6 +4,7 @@ using DALTestsDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DALTestsDB.Migrations
 {
     [DbContext(typeof(TestDBContext))]
-    partial class TestDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231109194830_M2")]
+    partial class M2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,51 +67,6 @@ namespace DALTestsDB.Migrations
                             IsArchived = false,
                             Name = "Users"
                         });
-                });
-
-            modelBuilder.Entity("DALTestsDB.TestAssigned", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<TimeSpan>("ActiveTime")
-                        .HasColumnType("time");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TestId");
-
-                    b.ToTable("TestAssigned");
-                });
-
-            modelBuilder.Entity("DALTestsDB.TestAssignedUser", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestAssignedId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "TestAssignedId");
-
-                    b.HasIndex("TestAssignedId");
-
-                    b.ToTable("TestAssignedUser");
                 });
 
             modelBuilder.Entity("DALTestsDB.User", b =>
@@ -436,36 +394,6 @@ namespace DALTestsDB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DALTestsDB.TestAssigned", b =>
-                {
-                    b.HasOne("TestLib.Classes.Test.Test", "Test")
-                        .WithMany()
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Test");
-                });
-
-            modelBuilder.Entity("DALTestsDB.TestAssignedUser", b =>
-                {
-                    b.HasOne("DALTestsDB.TestAssigned", "TestAssigned")
-                        .WithMany("TestAssignedUsers")
-                        .HasForeignKey("TestAssignedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DALTestsDB.User", "User")
-                        .WithMany("TestAssignedUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TestAssigned");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TestLib.Abstractions.Answer", b =>
                 {
                     b.HasOne("TestLib.Abstractions.Task", "Task")
@@ -550,15 +478,8 @@ namespace DALTestsDB.Migrations
                     b.Navigation("UserGroups");
                 });
 
-            modelBuilder.Entity("DALTestsDB.TestAssigned", b =>
-                {
-                    b.Navigation("TestAssignedUsers");
-                });
-
             modelBuilder.Entity("DALTestsDB.User", b =>
                 {
-                    b.Navigation("TestAssignedUsers");
-
                     b.Navigation("UserGroups");
                 });
 

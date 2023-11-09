@@ -22,7 +22,7 @@ namespace TestDesigner.Body
             };
             SelectedViewModel = BodyTypes.First();
         }
-        public TaskBody CreateBody()
+        public TestLib.Abstractions.Body CreateBody()
         {
             return SelectedViewModel.CreateBody();
         }

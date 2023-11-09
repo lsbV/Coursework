@@ -9,7 +9,9 @@ namespace DALTestsDB
     public class TestAssignedUser
     {
         public int Id { get; set; }
+        public int TestAssignedId { get; set; }
         public TestAssigned TestAssigned { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
     }
 }

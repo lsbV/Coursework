@@ -30,10 +30,10 @@ namespace Server.Pages.UserTestResults
         #region Methods
         public async Task LoadData()
         {
-            using (var db = new TestDBContext())
-            {
-                Tests = new(await db.UserTest.TakeLast(20).ToArrayAsync());
-            }
+            //using (var db = new TestDBContext())
+            //{
+            //    //Tests = new(await db.UserTest.TakeLast(20).ToArrayAsync());
+            //}
         }
         #endregion Methods
     }

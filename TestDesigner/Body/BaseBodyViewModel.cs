@@ -10,7 +10,7 @@ namespace TestDesigner.Body
 {
     public abstract class BaseBodyViewModel : BaseViewModel
     {
-        public abstract TaskBody CreateBody();
+        public abstract TestLib.Abstractions.Body CreateBody();
         public BaseBodyViewModel() { }
     }
 }

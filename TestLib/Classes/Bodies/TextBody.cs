@@ -2,13 +2,13 @@
 
 namespace TestLib.Classes.Bodies
 {
-    public class TextTaskBody : TaskBody
+    public class TextBody : Body
     {
-        public TextTaskBody(string? text)
+        public TextBody(string? text)
         {
             Text = text;
         }
-        public TextTaskBody()
+        public TextBody()
         {
             Text = string.Empty;
         }

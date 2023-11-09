@@ -15,14 +15,23 @@
         <DataTemplate DataType="{x:Type users:AllUsersViewModel}">
             <users:AllUsersView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type users:UserViewModel}">
+            <users:UserView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type groups:AllGroupsViewModel}">
             <groups:AllGroupsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type groups:GroupViewModel}">
+            <groups:GroupView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type tests:AllTestsViewModel}">
             <tests:AllTestsView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type testsAssigned:TestsAssignedViewModel}">
-            <testsAssigned:TestsAssignedView/>
+        <DataTemplate DataType="{x:Type tests:TestViewModel}">
+            <tests:TestView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type testsAssigned:AllTestAssignedViewModel}">
+            <testsAssigned:AllTestsAssignedView/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -30,7 +39,33 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ListBox ItemsSource="{Binding Pages}" SelectedItem="{Binding Current}" DisplayMemberPath="Name" Grid.Column="0"/>
-        <UserControl Content="{Binding Current}"  Grid.Column="1"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="AUTO"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.ColumnSpan="2" >
+            <MenuItem Header="About"/>
+        </Menu>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="1">
+            <Button>
+                Home
+            </Button>
+            <Button Command="{Binding RefreshCommand}">
+                Refresh
+            </Button>
+        </StackPanel>
+        <ListBox ItemsSource="{Binding Pages}" SelectedItem="{Binding Current}" DisplayMemberPath="Name" Grid.Column="0" Grid.Row="2"/>
+        <UserControl Content="{Binding Current}"  Grid.Column="1" Grid.Row="2"/>
+        <Grid   Grid.Row="3" Grid.ColumnSpan="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding Status}" Width="200"  />
+            <ProgressBar IsIndeterminate="{Binding IsBusy}" Width="200" Height="20" Grid.Column="2"/>
+        </Grid>
     </Grid>
 </Window>

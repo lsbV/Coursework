@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DALTestsDB.Migrations
 {
     /// <inheritdoc />
@@ -28,19 +30,6 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskBody",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TaskBody", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Test",
                 columns: table => new
                 {
@@ -50,8 +39,9 @@ namespace DALTestsDB.Migrations
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InfoForTestTaker = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaxPoints = table.Column<double>(type: "float", nullable: false),
-                    MinPoints = table.Column<double>(type: "float", nullable: false)
+                    PassingPercent = table.Column<double>(type: "float", nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,68 +69,46 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TextTaskBody",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TextTaskBody", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TextTaskBody_TaskBody_Id",
-                        column: x => x.Id,
-                        principalTable: "TaskBody",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Task",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BodyId = table.Column<int>(type: "int", nullable: false),
                     Point = table.Column<double>(type: "float", nullable: false),
-                    TestId = table.Column<int>(type: "int", nullable: true)
+                    TestId = table.Column<int>(type: "int", nullable: false),
+                    BodyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Task", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Task_TaskBody_BodyId",
-                        column: x => x.BodyId,
-                        principalTable: "TaskBody",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Task_Test_TestId",
                         column: x => x.TestId,
                         principalTable: "Test",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupUser",
+                name: "UserGroup",
                 columns: table => new
                 {
-                    GroupsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupUser", x => new { x.GroupsId, x.UsersId });
+                    table.PrimaryKey("PK_UserGroup", x => new { x.UserId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_GroupUser_Group_GroupsId",
-                        column: x => x.GroupsId,
+                        name: "FK_UserGroup_Group_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupUser_User_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_UserGroup_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -154,7 +122,7 @@ namespace DALTestsDB.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TaskId = table.Column<int>(type: "int", nullable: true)
+                    TaskId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,7 +131,28 @@ namespace DALTestsDB.Migrations
                         name: "FK_Answer_Task_TaskId",
                         column: x => x.TaskId,
                         principalTable: "Task",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Body",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TaskId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Body", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Body_Task_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Task",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,20 +173,68 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "textAnswer",
+                name: "TextAnswer",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_textAnswer", x => x.Id);
+                    table.PrimaryKey("PK_TextAnswer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_textAnswer_Answer_Id",
+                        name: "FK_TextAnswer_Answer_Id",
                         column: x => x.Id,
                         principalTable: "Answer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TextBody",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TextBody", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TextBody_Body_Id",
+                        column: x => x.Id,
+                        principalTable: "Body",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Group",
+                columns: new[] { "Id", "CreatedAt", "Description", "IsArchived", "Name" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admins group", false, "Admins" },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Users group", false, "Users" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "CreatedAt", "Description", "FirstName", "IsArchived", "LastName", "Login", "Password", "Role" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2000, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Admin", false, "Admin", "admin", "admin", 0 },
+                    { 2, new DateTime(2000, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User", false, "User", "user", "user", 1 },
+                    { 3, new DateTime(2000, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User1", true, "User1", "user1", "user1", 1 },
+                    { 4, new DateTime(2000, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User2", false, "User2", "user2", "user2", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserGroup",
+                columns: new[] { "GroupId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 },
+                    { 2, 3 },
+                    { 2, 4 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -206,19 +243,20 @@ namespace DALTestsDB.Migrations
                 column: "TaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupUser_UsersId",
-                table: "GroupUser",
-                column: "UsersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Task_BodyId",
-                table: "Task",
-                column: "BodyId");
+                name: "IX_Body_TaskId",
+                table: "Body",
+                column: "TaskId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Task_TestId",
                 table: "Task",
                 column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroup_GroupId",
+                table: "UserGroup",
+                column: "GroupId");
         }
 
         /// <inheritdoc />
@@ -228,13 +266,19 @@ namespace DALTestsDB.Migrations
                 name: "ChooseFromListTask");
 
             migrationBuilder.DropTable(
-                name: "GroupUser");
+                name: "TextAnswer");
 
             migrationBuilder.DropTable(
-                name: "textAnswer");
+                name: "TextBody");
 
             migrationBuilder.DropTable(
-                name: "TextTaskBody");
+                name: "UserGroup");
+
+            migrationBuilder.DropTable(
+                name: "Answer");
+
+            migrationBuilder.DropTable(
+                name: "Body");
 
             migrationBuilder.DropTable(
                 name: "Group");
@@ -243,13 +287,7 @@ namespace DALTestsDB.Migrations
                 name: "User");
 
             migrationBuilder.DropTable(
-                name: "Answer");
-
-            migrationBuilder.DropTable(
                 name: "Task");
-
-            migrationBuilder.DropTable(
-                name: "TaskBody");
 
             migrationBuilder.DropTable(
                 name: "Test");

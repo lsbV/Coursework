@@ -10,32 +10,85 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="AUTO"/>
         </Grid.RowDefinitions>
-        <xceed:WatermarkTextBox Watermark="First name" Text="{Binding FirstName}" Grid.Row="0"/>
-        <xceed:WatermarkTextBox Watermark="Last name" Text="{Binding LastName}" Grid.Row="1"/>
-        <xceed:WatermarkTextBox Watermark="Login" Text="{Binding Login}" Grid.Row="2"/>
-        <xceed:WatermarkTextBox Watermark="Password" Text="{Binding Password}" Grid.Row="3"/>
-        <xceed:WatermarkTextBox Watermark="Description" Text="{Binding Description}" Grid.Row="4"/>
-        <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding Role}" Grid.Row="5"/>
-        <DockPanel Grid.Row="6" LastChildFill="True">
-            <CheckBox IsChecked="{Binding IsArchived}" DockPanel.Dock="Right" VerticalContentAlignment="Center">
-                <CheckBox.LayoutTransform>
-                    <ScaleTransform ScaleX="2" ScaleY="2" />
-                </CheckBox.LayoutTransform>
-            </CheckBox>
-            <Label DockPanel.Dock="Left" Content="Archived"/>
-        </DockPanel>
-        <DatePicker SelectedDate="{Binding CreatedAt}" Grid.Row="7"/>
-        <Grid Grid.Row="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <xceed:WatermarkTextBox Watermark="First name" Text="{Binding FirstName}" Grid.Row="0"/>
+            <xceed:WatermarkTextBox Watermark="Last name" Text="{Binding LastName}" Grid.Row="1"/>
+            <xceed:WatermarkTextBox Watermark="Login" Text="{Binding Login}" Grid.Row="2"/>
+            <xceed:WatermarkTextBox Watermark="Password" Text="{Binding Password}" Grid.Row="3"/>
+            <xceed:WatermarkTextBox Watermark="Description" Text="{Binding Description}" Grid.Row="4"/>
+            <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding Role}" Grid.Row="5"/>
+            <DockPanel Grid.Row="6" LastChildFill="True">
+                <CheckBox IsChecked="{Binding IsArchived}" DockPanel.Dock="Right" VerticalContentAlignment="Center">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="2" ScaleY="2" />
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+                <Label DockPanel.Dock="Left" Content="Archived"/>
+            </DockPanel>
+            <DatePicker SelectedDate="{Binding CreatedAt}" Grid.Row="7"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ListBox ItemsSource="{Binding UserGroups}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Name}" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Description}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CreatedAt}" Grid.Column="2"/>
+                                <Button Content="Delete" Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox ItemsSource="{Binding AllGroups}" Grid.Row="1">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Name}" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Description}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding CreatedAt}" Grid.Column="2"/>
+                                <Button Content="Add" Command="{Binding DataContext.AddCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

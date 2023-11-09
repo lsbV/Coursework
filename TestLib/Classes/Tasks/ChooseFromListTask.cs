@@ -7,7 +7,7 @@ namespace TestLib.Classes.Tasks
 {
     public class ChooseFromListTask : Task
     {
-        public ChooseFromListTask(string description, double point, ICollection<Answer> answers, TaskBody body)
+        public ChooseFromListTask(string description, double point, ICollection<Answer> answers, Body body)
         {
             Description = "Choose from list";
             Point = point;
@@ -18,8 +18,6 @@ namespace TestLib.Classes.Tasks
         {
             Description = "Choose from list";
             Point = 0;
-            Answers = new ObservableCollection<Answer>();
-            Body = new TextTaskBody();
         }
 
         public object Clone()
@@ -29,7 +27,7 @@ namespace TestLib.Classes.Tasks
             {
                 answers.Add((Answer)answer.Clone());
             }
-            return new ChooseFromListTask(Description, Point, answers, (TaskBody)Body.Clone());
+            return new ChooseFromListTask(Description, Point, answers, (Body)Body.Clone());
         }
 
         public override bool CheckAnswers(ICollection<Answer> answers)

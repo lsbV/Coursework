@@ -8,6 +8,9 @@ namespace TestLib.Classes.Answers
             IsCorrect = isCorrect;
             Text = text;
         }
+        public TextAnswer()
+        {
+        }
 
         public override object Clone()
         {

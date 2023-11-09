@@ -2,7 +2,7 @@
 
 namespace TestLib.Classes.Bodies
 {
-    public class AudioTaskBody : TaskBody
+    public class AudioTaskBody : Body
     {
         public override object Clone()
         {

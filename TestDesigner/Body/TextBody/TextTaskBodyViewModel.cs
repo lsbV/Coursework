@@ -23,9 +23,9 @@ namespace TestDesigner.Body
             Name = "Text body";
         }
 
-        public override TaskBody CreateBody()
+        public override TestLib.Abstractions.Body CreateBody()
         {
-            return new TextTaskBody(Text);
+            return new TextBody(Text);
         }
         #endregion Constructors
 

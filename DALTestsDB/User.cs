@@ -13,6 +13,10 @@ namespace DALTestsDB
         public string? Description { get; set; }
         public bool IsArchived { get; set; }
         public DateTime CreatedAt { get; set; }
+
         public List<UserGroup> UserGroups { get; set; }
+        public List<Group> Groups { get; set; }
+        public List<TestAssignedUser> TestAssignedUsers { get; set; }
+        public List<TestAssigned> TestAssigneds { get; set; }
     }
 }

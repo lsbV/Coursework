@@ -1,10 +1,11 @@
 ﻿using TestLib.Classes.Bodies;
+using TestLib.Classes.Test;
 
 namespace TestLib.Abstractions
 {
     public abstract class Task
     {
-        protected Task(int id, string description, TaskBody body, double point, ICollection<Answer> answers)
+        protected Task(int id, string description, Body body, double point, ICollection<Answer> answers)
         {
             Id = id;
             Description = description;
@@ -16,16 +17,20 @@ namespace TestLib.Abstractions
         {
             Id = 0;
             Description = string.Empty;
-            Body = new TextTaskBody();
             Point = 0;
-            Answers = new List<Answer>();
         }
 
         public int Id { get; set; }
         public string Description { get; set; }
-        public TaskBody Body { get; set; }
         public double Point { get; set; }
-        public ICollection<Answer> Answers { get; set; }
+
+        public int TestId { get; set; }
+        public int BodyId { get; set; }
+        public Test Test { get; set; } = null!;
+        public Body Body { get; set; } = null!;
+        public ICollection<Answer> Answers { get; set; } = null!;
+
+
         public abstract bool CheckAnswers(ICollection<Answer> answers);
     }
 }

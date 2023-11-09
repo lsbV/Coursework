@@ -6,7 +6,9 @@ namespace DALTestsDB
     public class UserTask
     {
         public int Id { get; set; }
+        public int UserTestId { get; set; }
         public UserTest UserTest { get; set; }
+        public int TaskId { get; set; }
         public Task Task { get; set; }
         public bool IsMissed { get; set; }
         public double? TaskGrade { get; set; }

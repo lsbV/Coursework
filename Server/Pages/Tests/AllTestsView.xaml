@@ -15,7 +15,14 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Tests}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <WrapPanel>
+            <Button Content="Add" Command="{Binding AddCommand}"/>
+        </WrapPanel>
+        <DataGrid ItemsSource="{Binding Tests}" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Title}"/>
@@ -24,8 +31,33 @@
                 <DataGridTextColumn Header="Passing percent" Binding="{Binding PassingPercent}"/>
                 <DataGridTextColumn Header="Archived" Binding="{Binding IsArchived}"/>
                 <DataGridTextColumn Header="Created date" Binding="{Binding CreatedAt}"/>
+                <DataGridTemplateColumn Header="Control">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Edit" Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                <Button Content="Remove" Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
-            
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Info for test taker:" Grid.Row="0"/>
+                        <TextBlock Text="{Binding InfoForTestTaker}" Grid.Row="1"/>
+                        <TextBlock Text="Description:" Grid.Row="3"/>
+                        <TextBlock Text="{Binding Description}" Grid.Row="4"/>
+                    </Grid>                   
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
     </Grid>
 </UserControl>

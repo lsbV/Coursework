@@ -12,23 +12,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestLib.Classes.Tasks;
-using TestLib.Classes.Test;
 
-namespace Server.Pages.Tests
+namespace Server.Pages.TestsAssigned
 {
-    public partial class AllTestsViewModel : BaseViewModel, IUpdateable
+    public partial class AllTestAssignedViewModel : BaseViewModel, IUpdateable
     {
         #region ObservableProperties
-        [ObservableProperty] ObservableCollection<Test> tests;
-
+        [ObservableProperty] ObservableCollection<TestAssigned> testsAssigned;
         #endregion ObservableProperties
-        
+
         #region Constructors
-        public AllTestsViewModel()
+        public AllTestAssignedViewModel()
         {
-            Name = "Tests";
-            Tests = new();           
+            Name = "Tests assigned";
+            TestsAssigned = new();
         }
         #endregion Constructors
 
@@ -36,24 +33,24 @@ namespace Server.Pages.Tests
         [RelayCommand]
         private void Edit(object param)
         {
-            Test test = (Test)param;
-            var testVM = new TestViewModel(test);
-            WeakReferenceMessenger.Default.Send(testVM as BaseViewModel);
+            var testAssigned = (TestAssigned)param;
+            var testAssignedVM = new TestAssignedViewModel(testAssigned);
+            WeakReferenceMessenger.Default.Send(testAssignedVM as BaseViewModel);
         }
         [RelayCommand]
         private async Task RemoveAsync(object param)
         {
-            Test test = (Test)param;
+            var testAssigned = (TestAssigned)param;
             using var uow = DI.Create<IGenericUnitOfWork>();
-            var repo = uow.Repository<Test>();
-            await repo.RemoveAsync(test);
+            var repo = uow.Repository<TestAssigned>();
+            await repo.RemoveAsync(testAssigned);
             await UpdateAsynk();
         }
         [RelayCommand]
         private void Add(object param)
         {
-            var testVM = new TestViewModel();
-            WeakReferenceMessenger.Default.Send(testVM as BaseViewModel);
+            var testAssignedVM = new TestAssignedViewModel();
+            WeakReferenceMessenger.Default.Send(testAssignedVM as BaseViewModel);
         }
         [RelayCommand]
         private async Task RefreshAsync(object param)
@@ -63,18 +60,12 @@ namespace Server.Pages.Tests
         #endregion Commands
 
         #region Methods
-        public async Task LoadTestsAsync()
-        {
-            using var uow = DI.Create<IGenericUnitOfWork>();
-            var repoTest = uow.Repository<Test>();
-            var list = await repoTest.GetAllAsync();
-        }
-
         public async Task UpdateAsynk()
         {
-            var uow = DI.Create<IGenericUnitOfWork>();
-            var repo = uow.Repository<Test>();
-            Tests = new (await repo.GetAllAsync());
+            using var uow = DI.Create<IGenericUnitOfWork>();
+            var repo = uow.Repository<TestAssigned>();
+            var tests = await repo.GetAllAsync();
+            TestsAssigned = new(tests);
         }
         #endregion Methods
     }

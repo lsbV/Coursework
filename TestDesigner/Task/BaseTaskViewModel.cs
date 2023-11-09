@@ -16,7 +16,7 @@ namespace TestDesigner.Task
         [ObservableProperty] private double point;
         [ObservableProperty] private ICollection<TestLib.Abstractions.Answer> answers;
         //[ObservableProperty] private ICollection<IAnswer> correctAnswers;
-        [ObservableProperty] private TaskBody body;
+        [ObservableProperty] private TestLib.Abstractions.Body body;
         protected WorkMode workMode;
 
         //public BaseTaskViewModel()

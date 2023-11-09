@@ -2,10 +2,13 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Windows.Shapes;
 using TestLib.Abstractions;
 using TestLib.Classes.Test;
+using static System.Net.Mime.MediaTypeNames;
+using Path = System.IO.Path;
 
-namespace TestDesigner.Infrastructure
+namespace Server.Infrastructure
 {
     public class FileExplorer : IFileExplorerProvider
     {
@@ -21,7 +24,7 @@ namespace TestDesigner.Infrastructure
             {
                 return null;
             }
-        }
+        }       
 
         private static bool RewriteFile(string path, string json)
         {

@@ -2,7 +2,7 @@
 
 namespace TestLib.Classes.Bodies
 {
-    public class VideoTaskBody : TaskBody
+    public class VideoTaskBody : Body
     {
         public override object Clone()
         {

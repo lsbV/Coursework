@@ -10,5 +10,6 @@ namespace DALTestsDB
         public bool IsArchived { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<UserGroup> UserGroups { get; set; }
+        public List<User> Users { get; set; }
     }
 }

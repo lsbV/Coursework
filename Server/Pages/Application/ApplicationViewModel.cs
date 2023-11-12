@@ -5,6 +5,7 @@ using DALTestsDB;
 using Repository;
 using Server.Ninject;
 using Server.Pages.Groups;
+using Server.Pages.Listener;
 using Server.Pages.Tests;
 using Server.Pages.TestsAssigned;
 using Server.Pages.Users;
@@ -30,7 +31,8 @@ namespace Server.Pages.Application
                 new AllUsersViewModel(),
                 new AllGroupsViewModel(),
                 new AllTestsViewModel(),
-                new AllTestAssignedViewModel()
+                new AllTestAssignedViewModel(),
+                new ListenerViewModel()
             };
             Current = pages.First();
             WeakReferenceMessenger.Default.Register<BaseViewModel>(this);

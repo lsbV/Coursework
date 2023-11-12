@@ -10,5 +10,6 @@
         public abstract object Clone();
 
         public abstract int CompareTo(Answer? other);
+        public abstract Answer GetClearAnswer();
     }
 }

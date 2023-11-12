@@ -33,5 +33,12 @@ namespace TestLib.Classes.Answers
                 throw new System.ArgumentException("Object is not a TextAnswer");
             }
         }
+
+        public override Answer GetClearAnswer()
+        {
+            var clone = (TextAnswer)Clone();
+            clone.IsCorrect = false;
+            return clone;
+        }
     }
 }

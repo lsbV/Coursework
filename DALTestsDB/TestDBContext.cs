@@ -29,7 +29,7 @@ namespace DALTestsDB
         public DbSet<UserTestResult> UserTestResult { get; set; }
         public DbSet<UserTaskResult> UserTaskResults { get; set; }
         public DbSet<UserAnswerResult> UserAnswerResults { get; set; }
-        
+
         public DbSet<TestAssigned> TestAssigned { get; set; }
         public DbSet<TestAssignedUser> TestAssignedUser { get; set; }
 
@@ -155,19 +155,16 @@ namespace DALTestsDB
                 .WithOne(task => task.Body)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            
+            modelBuilder.Entity<UserTestResult>()
+                .HasOne(x => x.TestAssignedUser)
+                .WithOne()
+                .HasForeignKey<UserTestResult>(x => x.TestAssignedUserId)
+                .OnDelete(DeleteBehavior.NoAction);            
+
             modelBuilder.Entity<UserTestResult>()
                 .HasMany(t=>t.UserTaskResults) 
                 .WithOne(t => t.UserTestResult) 
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<UserTaskResult>()
-                .HasMany(t=>t.UserAnswerResults)
-                .WithOne(t => t.UserTaskResult)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<UserAnswerResult>()
-                .HasOne(t=>t.UserTaskResult)
-                .WithMany(t=>t.UserAnswerResults)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserTaskResult>()
@@ -175,10 +172,25 @@ namespace DALTestsDB
                 .WithMany(x => x.UserTaskResults)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Task>().HasMany<UserTaskResult>().WithOne(x => x.Task).OnDelete(DeleteBehavior.NoAction);
+           
+
+            modelBuilder.Entity<UserTaskResult>()
+                .HasMany(t => t.UserAnswerResults)
+                .WithOne(t => t.UserTaskResult)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserAnswerResult>()
+                .HasOne(t => t.UserTaskResult)
+                .WithMany(t => t.UserAnswerResults)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
 
             modelBuilder.Entity<Group>().HasMany(x => x.Users).WithMany(x => x.Groups).UsingEntity<UserGroup>();
             modelBuilder.Entity<TestAssigned>().HasMany(x => x.Users).WithMany(x => x.TestAssigneds).UsingEntity<TestAssignedUser>();
-                                              
+            //modelBuilder.Entity<User>().HasMany(x => x.UserTestResults).WithOne(x => x.User);
+            //modelBuilder.Entity<TestAssigned>().HasMany(x => x.UserTestResults).WithOne(x => x.TestAssigned).OnDelete(DeleteBehavior.Cascade);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

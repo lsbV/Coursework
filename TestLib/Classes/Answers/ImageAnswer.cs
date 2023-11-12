@@ -23,5 +23,10 @@ namespace TestLib.Classes.Answers
         {
             throw new NotImplementedException();
         }
+
+        public override Answer GetClearAnswer()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

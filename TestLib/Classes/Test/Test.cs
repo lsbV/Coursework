@@ -18,5 +18,21 @@ namespace TestLib.Classes.Test
 
         public double? TaskPointsSum => Tasks?.Sum(s => s.Point);
         public ICollection<Task> Tasks { get; set; } = default!;
+        
+        public Test GetClearTest()
+        {
+            return new Test()
+            {
+                Id = Id,
+                Title = Title,
+                Author = Author,
+                Description = Description,
+                InfoForTestTaker = InfoForTestTaker,
+                PassingPercent = PassingPercent,
+                IsArchived = IsArchived,
+                CreatedAt = CreatedAt,
+                Tasks = Tasks.Select(s => s.GetClearTask()).ToList()
+            };
+        }
     }
 }

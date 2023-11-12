@@ -13,9 +13,11 @@
         //    if (IsMissed) return TestResultStatus.NotPassed;
         //    var passingPercent = TestAssignedUser?.TestAssigned?.Test?.PassingPercent;
         //    if (passingPercent.HasValue == false) return TestResultStatus.Unknown;
-        //    if(Result > passingPercent.Value) return TestResultStatus.Passed;
+        //    if (Result > passingPercent.Value) return TestResultStatus.Passed;
         //    return TestResultStatus.Failed;
         //}
+
+        
         public TestAssignedUser TestAssignedUser { get; set; } = default!;
         public List<UserTaskResult> UserTaskResults { get; set; } = default!;
     }

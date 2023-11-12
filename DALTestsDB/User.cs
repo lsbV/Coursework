@@ -14,9 +14,8 @@ namespace DALTestsDB
         public bool IsArchived { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        //public List<UserGroup> UserGroups { get; set; } = default!;
         public List<Group> Groups { get; set; } = default!;
-        //public List<TestAssignedUser> TestAssignedUsers { get; set; } = default!;
         public List<TestAssigned> TestAssigneds { get; set; } = default!;
+        //public List<UserTestResult> UserTestResults { get; set; } = default!;
     }
 }

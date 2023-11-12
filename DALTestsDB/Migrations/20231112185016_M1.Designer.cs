@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DALTestsDB.Migrations
 {
     [DbContext(typeof(TestDBContext))]
-    [Migration("20231112104031_M1")]
+    [Migration("20231112185016_M1")]
     partial class M1
     {
         /// <inheritdoc />
@@ -92,6 +92,9 @@ namespace DALTestsDB.Migrations
                     b.Property<int>("TestId")
                         .HasColumnType("int");
 
+                    b.Property<TimeSpan>("TimeToTake")
+                        .HasColumnType("time");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TestId");
@@ -106,7 +109,8 @@ namespace DALTestsDB.Migrations
                             EndAt = new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsArchived = false,
                             StartAt = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TestId = 1
+                            TestId = 1,
+                            TimeToTake = new TimeSpan(0, 1, 0, 0, 0)
                         });
                 });
 
@@ -238,6 +242,74 @@ namespace DALTestsDB.Migrations
                             Password = "user2",
                             Role = 1
                         });
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserAnswerResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserTaskResultId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("UserTaskResultId");
+
+                    b.ToTable("UserAnswerResults");
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserTaskResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserTestResultId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
+                    b.HasIndex("UserTestResultId");
+
+                    b.ToTable("UserTaskResults");
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserTestResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("PassageDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TestAssignedUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestAssignedUserId")
+                        .IsUnique();
+
+                    b.ToTable("UserTestResult");
                 });
 
             modelBuilder.Entity("TestLib.Abstractions.Answer", b =>
@@ -508,6 +580,55 @@ namespace DALTestsDB.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DALTestsDB.UserAnswerResult", b =>
+                {
+                    b.HasOne("TestLib.Abstractions.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DALTestsDB.UserTaskResult", "UserTaskResult")
+                        .WithMany("UserAnswerResults")
+                        .HasForeignKey("UserTaskResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("UserTaskResult");
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserTaskResult", b =>
+                {
+                    b.HasOne("TestLib.Abstractions.Task", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DALTestsDB.UserTestResult", "UserTestResult")
+                        .WithMany("UserTaskResults")
+                        .HasForeignKey("UserTestResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+
+                    b.Navigation("UserTestResult");
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserTestResult", b =>
+                {
+                    b.HasOne("DALTestsDB.TestAssignedUser", "TestAssignedUser")
+                        .WithOne()
+                        .HasForeignKey("DALTestsDB.UserTestResult", "TestAssignedUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("TestAssignedUser");
+                });
+
             modelBuilder.Entity("TestLib.Abstractions.Answer", b =>
                 {
                     b.HasOne("TestLib.Abstractions.Task", "Task")
@@ -585,6 +706,16 @@ namespace DALTestsDB.Migrations
                         .HasForeignKey("TestLib.Classes.Tasks.ChooseFromListTask", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserTaskResult", b =>
+                {
+                    b.Navigation("UserAnswerResults");
+                });
+
+            modelBuilder.Entity("DALTestsDB.UserTestResult", b =>
+                {
+                    b.Navigation("UserTaskResults");
                 });
 
             modelBuilder.Entity("TestLib.Abstractions.Task", b =>

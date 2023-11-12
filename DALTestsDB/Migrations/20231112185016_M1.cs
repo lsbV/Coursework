@@ -97,9 +97,10 @@ namespace DALTestsDB.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TestId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeToTake = table.Column<TimeSpan>(type: "time", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsArchived = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -255,6 +256,76 @@ namespace DALTestsDB.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserTestResult",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TestAssignedUserId = table.Column<int>(type: "int", nullable: false),
+                    PassageDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTestResult", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserTestResult_TestAssignedUser_TestAssignedUserId",
+                        column: x => x.TestAssignedUserId,
+                        principalTable: "TestAssignedUser",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTaskResults",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TaskId = table.Column<int>(type: "int", nullable: false),
+                    UserTestResultId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTaskResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserTaskResults_Task_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Task",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserTaskResults_UserTestResult_UserTestResultId",
+                        column: x => x.UserTestResultId,
+                        principalTable: "UserTestResult",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAnswerResults",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserTaskResultId = table.Column<int>(type: "int", nullable: false),
+                    AnswerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAnswerResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAnswerResults_Answer_AnswerId",
+                        column: x => x.AnswerId,
+                        principalTable: "Answer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserAnswerResults_UserTaskResults_UserTaskResultId",
+                        column: x => x.UserTaskResultId,
+                        principalTable: "UserTaskResults",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Group",
                 columns: new[] { "Id", "CreatedAt", "Description", "IsArchived", "Name" },
@@ -287,8 +358,8 @@ namespace DALTestsDB.Migrations
 
             migrationBuilder.InsertData(
                 table: "TestAssigned",
-                columns: new[] { "Id", "CreatedAt", "EndAt", "IsArchived", "StartAt", "TestId" },
-                values: new object[] { 1, new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
+                columns: new[] { "Id", "CreatedAt", "EndAt", "IsArchived", "StartAt", "TestId", "TimeToTake" },
+                values: new object[] { 1, new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, new TimeSpan(0, 1, 0, 0, 0) });
 
             migrationBuilder.InsertData(
                 table: "UserGroup",
@@ -380,9 +451,35 @@ namespace DALTestsDB.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserAnswerResults_AnswerId",
+                table: "UserAnswerResults",
+                column: "AnswerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAnswerResults_UserTaskResultId",
+                table: "UserAnswerResults",
+                column: "UserTaskResultId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserGroup_GroupId",
                 table: "UserGroup",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTaskResults_TaskId",
+                table: "UserTaskResults",
+                column: "TaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTaskResults_UserTestResultId",
+                table: "UserTaskResults",
+                column: "UserTestResultId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserTestResult_TestAssignedUserId",
+                table: "UserTestResult",
+                column: "TestAssignedUserId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -392,34 +489,43 @@ namespace DALTestsDB.Migrations
                 name: "ChooseFromListTask");
 
             migrationBuilder.DropTable(
-                name: "TestAssignedUser");
-
-            migrationBuilder.DropTable(
                 name: "TextAnswer");
 
             migrationBuilder.DropTable(
                 name: "TextBody");
 
             migrationBuilder.DropTable(
+                name: "UserAnswerResults");
+
+            migrationBuilder.DropTable(
                 name: "UserGroup");
-
-            migrationBuilder.DropTable(
-                name: "TestAssigned");
-
-            migrationBuilder.DropTable(
-                name: "Answer");
 
             migrationBuilder.DropTable(
                 name: "Body");
 
             migrationBuilder.DropTable(
+                name: "Answer");
+
+            migrationBuilder.DropTable(
+                name: "UserTaskResults");
+
+            migrationBuilder.DropTable(
                 name: "Group");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Task");
 
             migrationBuilder.DropTable(
-                name: "Task");
+                name: "UserTestResult");
+
+            migrationBuilder.DropTable(
+                name: "TestAssignedUser");
+
+            migrationBuilder.DropTable(
+                name: "TestAssigned");
+
+            migrationBuilder.DropTable(
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Test");

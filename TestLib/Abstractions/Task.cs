@@ -32,5 +32,6 @@ namespace TestLib.Abstractions
 
         public abstract double GetGrade(IEnumerable<Answer> answers);
         public abstract bool CheckAnswers(ICollection<Answer> answers);
+        public abstract Task GetClearTask();
     }
 }

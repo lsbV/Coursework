@@ -26,13 +26,13 @@ namespace DALTestsDB
         public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
         public TimeSpan TimeToTake { get; set; }
-        //public TimeSpan ActiveTime => new TimeSpan( EndAt.Ticks - StartAt.Ticks);
 
         public DateTime CreatedAt { get; set; }
         public bool IsArchived { get; set; }
 
+
         public Test Test { get; set; } = default!;
-        //public List<TestAssignedUser> TestAssignedUsers { get; set; } = default!;
         public List<User> Users { get; set; } = default!;
+        //public List<UserTestResult> UserTestResults { get; set; } = default!;
     }
 }

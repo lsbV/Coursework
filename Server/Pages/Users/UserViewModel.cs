@@ -22,9 +22,8 @@ namespace Server.Pages.Users
     public partial class UserViewModel : BaseViewModel, IUpdateable
     {
         #region Fields
-        private int id;
         private User user = null!;
-        private ViewMode mode;
+        private readonly ViewMode mode;
         #endregion Fields
 
         #region ObservableProperties
@@ -105,10 +104,9 @@ namespace Server.Pages.Users
         
 
         [RelayCommand]
-        private void Cancel()
-        {
-            throw new NotImplementedException();
-            //WeakReferenceMessenger.Default.Send();
+        private static void Cancel()
+        {            
+            WeakReferenceMessenger.Default.Send(new User());
         }
         [RelayCommand]
         private void Add(object param)
@@ -135,13 +133,7 @@ namespace Server.Pages.Users
             var groups = new List<Group>(await repoGroup.FindAllAsync(x => listId.Contains(x.Id)));
             return groups;
         }
-        private async Task<IEnumerable<Group>> LoadAllGroupsAsync()
-        {
-            using var uow = DI.Create<IGenericUnitOfWork>();
-            var repo = uow.Repository<Group>();
-            return await repo.GetAllAsync();
-        }
-        private async Task<IEnumerable<Group>> LoadAllGroupsForUserAsync(int id)
+        private async Task<IEnumerable<Group>> LoadAllGroupsForUserAsync()
         {
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repoUsers = uow.Repository<User>();
@@ -162,7 +154,6 @@ namespace Server.Pages.Users
         }
         private void InitFields(User user)
         {
-            id = user.Id;
             FirstName = user.FirstName;
             LastName = user.LastName;
             Role = user.Role;
@@ -174,7 +165,7 @@ namespace Server.Pages.Users
             if (mode == ViewMode.Edit)
             {
                 //Task.Run(() => UserGroups = new(LoadAllGroupsForUser(user.Id).ToList()));
-                Task.Run(async () => UserGroups = new(await LoadAllGroupsForUserAsync(user.Id)));
+                Task.Run(async () => UserGroups = new(await LoadAllGroupsForUserAsync()));
             }
             else
             {
@@ -219,8 +210,9 @@ namespace Server.Pages.Users
 
         public async Task UpdateAsynk()
         {
-            var groups = await LoadAllGroupsAsync();
-            AllGroups = new(groups);
+            using var uow = DI.Create<IGenericUnitOfWork>();
+            var repo = uow.Repository<Group>();
+            AllGroups = new(await repo.GetAllAsync());
         }
 
 

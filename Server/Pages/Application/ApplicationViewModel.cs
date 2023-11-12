@@ -20,16 +20,18 @@ namespace Server.Pages.Application
     {
         [ObservableProperty] ICollection<BaseViewModel> pages;
         [ObservableProperty] BaseViewModel current;
-        [ObservableProperty] string status;
+        [ObservableProperty] string status = string.Empty;
         [ObservableProperty] bool isBusy;
         public ApplicationViewModel()
         {            
             Name = "Application";
-            pages = new List<BaseViewModel>();
-            pages.Add(new AllUsersViewModel());
-            pages.Add(new AllGroupsViewModel());
-            pages.Add(new AllTestsViewModel());
-            pages.Add(new AllTestAssignedViewModel());
+            pages = new List<BaseViewModel>
+            {
+                new AllUsersViewModel(),
+                new AllGroupsViewModel(),
+                new AllTestsViewModel(),
+                new AllTestAssignedViewModel()
+            };
             Current = pages.First();
             WeakReferenceMessenger.Default.Register<BaseViewModel>(this);
         }
@@ -39,7 +41,7 @@ namespace Server.Pages.Application
             Current = message;
         }
 
-        partial void OnCurrentChanged(BaseViewModel viewModel)
+        partial void OnCurrentChanged(BaseViewModel value)
         {
             if(RefreshCanExecute())
             {
@@ -57,7 +59,7 @@ namespace Server.Pages.Application
 
         private bool RefreshCanExecute()
         {
-            if (Current is IUpdateable updateable)
+            if (Current is IUpdateable)
             {
                 return true;
             }

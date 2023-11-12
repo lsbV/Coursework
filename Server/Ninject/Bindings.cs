@@ -2,6 +2,7 @@
 using Repository;
 using Server.Infrastructure;
 using TestLib.Abstractions;
+using Xceed.Wpf.Toolkit;
 
 namespace Server.Ninject
 {

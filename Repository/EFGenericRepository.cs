@@ -8,8 +8,8 @@ namespace Repository
 {
     public class EFGenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        DbContext context;
-        DbSet<TEntity> dbSet;
+        readonly DbContext context;
+        readonly DbSet<TEntity> dbSet;
 
         public EFGenericRepository(DbContext context)
         {
@@ -102,8 +102,10 @@ namespace Repository
         //}
         public async Task LoadAssociatedCollectionAsync(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression)
         {
-            dbSet.Attach(entity);
-            await dbSet.Entry(entity).Collection(expression).LoadAsync();
+
+            context.Attach(entity);
+            await context.Entry(entity).Collection(expression).LoadAsync();
+            //await dbSet.Entry(entity).Collection(expression).LoadAsync();
         }
         //public async Task LoadAssociatedCollection(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression, Expression<Func<object, object>> thenInclude)
         //{
@@ -111,7 +113,7 @@ namespace Repository
         //    await dbSet.Entry(entity).Collection(expression).Query().Include(thenInclude).LoadAsync();
         //}
 
-        public async Task LoadAssociatedPropertyAsync(TEntity entity, Expression<Func<TEntity, object>> expression)
+        public async Task LoadAssociatedPropertyAsync(TEntity entity, Expression<Func<TEntity, object?>> expression)
         {
             dbSet.Attach(entity);
             await dbSet.Entry(entity).Reference(expression).LoadAsync();

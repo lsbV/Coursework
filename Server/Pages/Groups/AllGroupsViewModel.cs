@@ -16,7 +16,7 @@ using TestLib.Interfaces;
 
 namespace Server.Pages.Groups
 {
-    public partial class AllGroupsViewModel : BaseViewModel, IUpdateable
+    public partial class AllGroupsViewModel : BaseViewModel, IUpdateable, IRecipient<Group>
     {
         #region ObservableProperties
         [ObservableProperty] ObservableCollection<Group> groups = null!;
@@ -29,18 +29,19 @@ namespace Server.Pages.Groups
         public AllGroupsViewModel()
         {
             Name = "Groups";
+            WeakReferenceMessenger.Default.Register<Group>(this);
         }
         #endregion Constructors
         #region Commands
         [RelayCommand]
-        private void Edit(object param)
+        private static void Edit(object param)
         {
             Group group = (Group)param;
             var groupVM = new GroupViewModel(group);
             WeakReferenceMessenger.Default.Send(groupVM as BaseViewModel);
         }
         [RelayCommand]
-        private void Add(object param)
+        private static void Add(object param)
         {
             var groupVM = new GroupViewModel();
             WeakReferenceMessenger.Default.Send(groupVM as BaseViewModel);
@@ -55,10 +56,9 @@ namespace Server.Pages.Groups
             await LoadGroupsAsync();
         }
         [RelayCommand]
-        private void Cancel(object param)
+        private static void Cancel()
         {   
-            throw new NotImplementedException();
-            WeakReferenceMessenger.Default.Send(new ApplicationViewModel());
+            WeakReferenceMessenger.Default.Send(new Group());
         }
         [RelayCommand]
         private async Task RefreshAsync()
@@ -77,6 +77,11 @@ namespace Server.Pages.Groups
         public async Task UpdateAsynk()
         {
             await LoadGroupsAsync();
+        }
+
+        public void Receive(Group message)
+        {
+            WeakReferenceMessenger.Default.Send(this as BaseViewModel);
         }
         #endregion Methods
     }

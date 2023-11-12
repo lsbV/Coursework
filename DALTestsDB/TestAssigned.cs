@@ -11,7 +11,6 @@ namespace DALTestsDB
     {
         public int Id { get; set; }
         public int TestId { get; set; }
-        public Test Test { get; set; }
         public ProgresStatus Status 
         { 
             get
@@ -24,11 +23,16 @@ namespace DALTestsDB
                     return ProgresStatus.InProgress;
             }
         }
-        public DateTime CreatedAt { get; set; }
         public DateTime StartAt { get; set; }
-        public TimeSpan ActiveTime { get; set; }
-        public DateTime EndAt { get => StartAt.Add(ActiveTime); }
-        public List<TestAssignedUser> TestAssignedUsers { get; set; }
-        public List<User> Users { get; set; }
+        public DateTime EndAt { get; set; }
+        public TimeSpan TimeToTake { get; set; }
+        //public TimeSpan ActiveTime => new TimeSpan( EndAt.Ticks - StartAt.Ticks);
+
+        public DateTime CreatedAt { get; set; }
+        public bool IsArchived { get; set; }
+
+        public Test Test { get; set; } = default!;
+        //public List<TestAssignedUser> TestAssignedUsers { get; set; } = default!;
+        public List<User> Users { get; set; } = default!;
     }
 }

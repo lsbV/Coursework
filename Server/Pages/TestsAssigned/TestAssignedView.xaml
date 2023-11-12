@@ -4,9 +4,197 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Server.Pages.TestsAssigned"
+             xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:TestAssignedViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="General info"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <StackPanel Grid.Row="0">
+                        <StackPanel.Resources>
+                            <!--<Style TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Margin" Value="10"/>
+        </Style>-->
+                            <Style TargetType="DockPanel">
+                                <Setter Property="LastChildFill" Value="True"/>
+                                <Setter Property="Margin" Value="10"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <DockPanel>
+                            <Label Content="Test title" DockPanel.Dock="Left"/>
+                            <xceed:WatermarkTextBox Text="{Binding Title}" Watermark="Name"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <Label Content="Test description" DockPanel.Dock="Left"/>
+                            <xceed:WatermarkTextBox Text="{Binding Description}" Watermark="Description"/>
+                        </DockPanel>
+                        <!--<DockPanel>
+        <Label Content="Archived" DockPanel.Dock="Left"/>
+        <CheckBox IsChecked="{Binding IsArchived}" />
+    </DockPanel>-->
+                        <DockPanel>
+                            <Label Content="Created date" DockPanel.Dock="Left"/>
+                            <DatePicker SelectedDate="{Binding CreatedAt}" IsEnabled="False"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <Label Content="Start date" DockPanel.Dock="Left"/>
+                            <xceed:DateTimePicker Value="{Binding StartAt}" />
+                        </DockPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="AUTO"/>
+                                <RowDefinition Height="AUTO"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="Day" Grid.Column="0" Grid.Row="0" />
+                            <Label Content="Hour" Grid.Column="1" Grid.Row="0"/>
+                            <Label Content="Minute" Grid.Column="2" Grid.Row="0"/>
+                            <xceed:IntegerUpDown Name="day" Minimum="0" Value="0" ValueChanged="TimeSpan_ValueChanged" Grid.Column="0" Grid.Row="1"/>
+                            <xceed:IntegerUpDown Name="hour" Minimum="0" Value="0" ValueChanged="TimeSpan_ValueChanged" Maximum="23" Grid.Column="1" Grid.Row="1"/>
+                            <xceed:IntegerUpDown Name="minute" Minimum="0" Value="0" ValueChanged="TimeSpan_ValueChanged" Maximum="59" Grid.Column="2" Grid.Row="1"/>
+                        </Grid>
+                        <DockPanel>
+                            <Label Content="End date" DockPanel.Dock="Left"/>
+                            <xceed:DateTimePicker Value="{Binding EndAt, Mode=OneWay}" IsEnabled="False"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <Label Content="Status" DockPanel.Dock="Left"/>
+                            <Label Content="{Binding Status}" />
+                        </DockPanel>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
             
+            
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Tests"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <ListView ItemsSource="{Binding AllTests}" Margin="0,10,0,0" Grid.Row="1" HorizontalContentAlignment="Stretch">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" />
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Title}" />
+                                    <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" />
+                                    <GridViewColumn Header="Description" Width="Auto" DisplayMemberBinding="{Binding Description}" />
+                                    <GridViewColumn Header="Passing percent" DisplayMemberBinding="{Binding PassingPercent}" />
+                                    <GridViewColumn Header="Archived" DisplayMemberBinding="{Binding IsArchived}" />
+                                    <GridViewColumn Header="Created date" DisplayMemberBinding="{Binding CreatedAt}" />
+                                    <GridViewColumn Header="Control">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Choose" Command="{Binding DataContext.ChooseTestCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem.Content>
+            </TabItem>
+            
+            
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Selected users"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <ListBox ItemsSource="{Binding Users}" Margin="0,10,0,0" Grid.Row="2" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="BorderBrush" Value="Black"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="Padding" Value="10"/>
+                                            <Setter Property="Margin" Value="2"/>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding FirstName}"/>
+                                        <TextBlock Text="{Binding LastName}" Grid.Column="1"/>
+                                        <TextBlock Text="{Binding Login}" Grid.Column="2"/>
+                                        <Button Content="Remove" Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="All Users"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <ListBox ItemsSource="{Binding AllUsers}" Grid.Row="3" Margin="0,10,0,0" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border HorizontalAlignment="Stretch">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="BorderBrush" Value="Black"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="Padding" Value="10"/>
+                                            <Setter Property="Margin" Value="2"/>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding FirstName}"/>
+                                        <TextBlock Text="{Binding LastName}" Grid.Column="1"/>
+                                        <TextBlock Text="{Binding Login}" Grid.Column="2"/>
+                                        <Button Content="Add" Command="{Binding DataContext.AddCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+        
+        
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Save" Command="{Binding SaveCommand}" Grid.Column="0"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Grid.Column="1"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -5,8 +5,10 @@ namespace Repository
 {
     public class GenericUnitOfWork : IGenericUnitOfWork
     {
-        DbContext context;
-        private Dictionary<Type, object> repositories = new Dictionary<Type, object>();
+        private readonly DbContext context;
+        private readonly Dictionary<Type, object> repositories = new();
+        private readonly object _lock = new();
+
         public GenericUnitOfWork()
         {
             context = new TestDBContext();
@@ -15,19 +17,27 @@ namespace Repository
         {
             this.context = context;
         }
+
         public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class
         {
-            if (repositories.Keys.Contains(typeof(TEntity)))
+            lock (_lock)
             {
-                return repositories[typeof(TEntity)] as IGenericRepository<TEntity>;
-            }
-            IGenericRepository<TEntity> newRep = new EFGenericRepository<TEntity>(context);
-            repositories.Add(typeof(TEntity), newRep);
-            return newRep;
-        }        
-        void IDisposable.Dispose()
+                if (repositories.ContainsKey(typeof(TEntity)))
+                {
+                    if (repositories[typeof(TEntity)] == null) throw new NullReferenceException("Repository is null");
+                    if (repositories[typeof(TEntity)] is IGenericRepository<TEntity> repo)
+                        return repo;
+                    throw new InvalidCastException("Repository is not IGenericRepository<TEntity>");
+                }
+                IGenericRepository<TEntity> newRep = new EFGenericRepository<TEntity>(context);
+                repositories.Add(typeof(TEntity), newRep);
+                return newRep;
+            }                
+        }
+        public void Dispose()
         {
             context.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public void Save()

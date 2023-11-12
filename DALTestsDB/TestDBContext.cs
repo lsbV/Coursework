@@ -24,12 +24,12 @@ namespace DALTestsDB
 
         public DbSet<User> User { get; set; }
         public DbSet<Group> Group { get; set; }
-
         public DbSet<UserGroup> UserGroup { get; set; }
-        //public DbSet<UserTest> UserTest { get; set; }
-        //public DbSet<UserTask> UserTask { get; set; }
-        //public DbSet<UserAnswer> UserAnswer { get; set; }
 
+        public DbSet<UserTestResult> UserTestResult { get; set; }
+        public DbSet<UserTaskResult> UserTaskResults { get; set; }
+        public DbSet<UserAnswerResult> UserAnswerResults { get; set; }
+        
         public DbSet<TestAssigned> TestAssigned { get; set; }
         public DbSet<TestAssignedUser> TestAssignedUser { get; set; }
 
@@ -84,6 +84,34 @@ namespace DALTestsDB
             {
                 new Test(){Id = 1, Title = "Test1", Description = "Test1", InfoForTestTaker = "Test1", Author = "Admin", CreatedAt = new(2010, 10, 10), PassingPercent = 50, IsArchived = false}
             };
+            var asignedTests = new TestAssigned[]
+            {
+                new TestAssigned(){Id = 1, TestId = 1, CreatedAt = new(2023,12,30), StartAt = new(2023,12,30), EndAt = new(2024,01,02), TimeToTake = new TimeSpan(1,0,0), IsArchived = false}
+            };
+            var asignedUsers = new TestAssignedUser[]
+            {
+                new TestAssignedUser(){Id = 1, UserId = 2, TestAssignedId = 1},
+                new TestAssignedUser(){Id = 2, UserId = 3, TestAssignedId = 1},
+                new TestAssignedUser(){Id = 3, UserId = 4, TestAssignedId = 1}
+            };
+            var userTestResult = new UserTestResult[]
+            {
+                new UserTestResult(){Id = 1, TestAssignedUserId = 1, PassageDate = new DateTime(2023,12,31)},
+                new UserTestResult(){Id = 2, TestAssignedUserId = 2, PassageDate = new DateTime(2023,12,31)},
+                new UserTestResult(){Id = 3, TestAssignedUserId = 3, PassageDate = new DateTime(2023,12,31)},
+            };
+            var userTaskResult = new UserTaskResult[]
+            {
+                new UserTaskResult(){Id = 1, UserTestResultId = 1, TaskId = 1},
+                new UserTaskResult(){Id = 2, UserTestResultId = 2, TaskId = 1},
+                new UserTaskResult(){Id = 3, UserTestResultId = 3, TaskId = 1},
+            };
+            var userAnswerResult = new UserAnswerResult[]
+            {
+                new UserAnswerResult(){Id = 1, UserTaskResultId = 1, AnswerId = 1},
+                new UserAnswerResult(){Id = 2, UserTaskResultId = 2, AnswerId = 2},
+                new UserAnswerResult(){Id = 3, UserTaskResultId = 3, AnswerId = 3},
+            };
 
 
             modelBuilder.Entity<User>().HasData(users);
@@ -93,6 +121,12 @@ namespace DALTestsDB
             modelBuilder.Entity<TextBody>().HasData(bodies);
             modelBuilder.Entity<ChooseFromListTask>().HasData(tasks);
             modelBuilder.Entity<Test>().HasData(tests);
+            modelBuilder.Entity<TestAssigned>().HasData(asignedTests);
+            modelBuilder.Entity<TestAssignedUser>().HasData(asignedUsers);
+            modelBuilder.Entity<UserTestResult>().HasData(userTestResult);
+            modelBuilder.Entity<UserTaskResult>().HasData(userTaskResult);
+            modelBuilder.Entity<UserAnswerResult>().HasData(userAnswerResult);
+
 
 
             modelBuilder.Entity<Test>()
@@ -121,16 +155,30 @@ namespace DALTestsDB
                 .WithOne(task => task.Body)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Group>().HasMany(g => g.Users).WithMany(u => u.Groups).UsingEntity<UserGroup>(
-                               ug => ug.HasOne(ug => ug.User).WithMany(u => u.UserGroups).HasForeignKey(ug => ug.UserId),
-                                              ug => ug.HasOne(ug => ug.Group).WithMany(g => g.UserGroups).HasForeignKey(ug => ug.GroupId),
-                                                             ug => ug.HasKey(ug => new { ug.UserId, ug.GroupId })
-                                                                        );
-            modelBuilder.Entity<TestAssigned>().HasMany(x=>x.Users).WithMany(x=>x.TestAssigneds).UsingEntity<TestAssignedUser>(
-                                              ug => ug.HasOne(ug => ug.User).WithMany(u => u.TestAssignedUsers).HasForeignKey(ug => ug.UserId),
-                                              ug => ug.HasOne(ug => ug.TestAssigned).WithMany(g => g.TestAssignedUsers).HasForeignKey(ug => ug.TestAssignedId),
-                                              ug => ug.HasKey(ug => new { ug.UserId, ug.TestAssignedId })
-                                              );
+            modelBuilder.Entity<UserTestResult>()
+                .HasMany(t=>t.UserTaskResults) 
+                .WithOne(t => t.UserTestResult) 
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserTaskResult>()
+                .HasMany(t=>t.UserAnswerResults)
+                .WithOne(t => t.UserTaskResult)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserAnswerResult>()
+                .HasOne(t=>t.UserTaskResult)
+                .WithMany(t=>t.UserAnswerResults)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserTaskResult>()
+                .HasOne(x=>x.UserTestResult)
+                .WithMany(x => x.UserTaskResults)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Group>().HasMany(x => x.Users).WithMany(x => x.Groups).UsingEntity<UserGroup>();
+            modelBuilder.Entity<TestAssigned>().HasMany(x => x.Users).WithMany(x => x.TestAssigneds).UsingEntity<TestAssignedUser>();
+                                              
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

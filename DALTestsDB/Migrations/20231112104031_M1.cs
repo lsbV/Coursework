@@ -91,6 +91,29 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TestAssigned",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TestId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestAssigned", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TestAssigned_Test_TestId",
+                        column: x => x.TestId,
+                        principalTable: "Test",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserGroup",
                 columns: table => new
                 {
@@ -173,6 +196,32 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TestAssignedUser",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TestAssignedId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestAssignedUser", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TestAssignedUser_TestAssigned_TestAssignedId",
+                        column: x => x.TestAssignedId,
+                        principalTable: "TestAssigned",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TestAssignedUser_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TextAnswer",
                 columns: table => new
                 {
@@ -216,6 +265,11 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Test",
+                columns: new[] { "Id", "Author", "CreatedAt", "Description", "InfoForTestTaker", "IsArchived", "PassingPercent", "Title" },
+                values: new object[] { 1, "Admin", new DateTime(2010, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Test1", "Test1", false, 50.0, "Test1" });
+
+            migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "CreatedAt", "Description", "FirstName", "IsArchived", "LastName", "Login", "Password", "Role" },
                 values: new object[,]
@@ -227,6 +281,16 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Task",
+                columns: new[] { "Id", "BodyId", "Description", "Point", "TestId" },
+                values: new object[] { 1, 1, "ChooseFromListTask", 10.0, 1 });
+
+            migrationBuilder.InsertData(
+                table: "TestAssigned",
+                columns: new[] { "Id", "CreatedAt", "EndAt", "IsArchived", "StartAt", "TestId" },
+                values: new object[] { 1, new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), false, new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 });
+
+            migrationBuilder.InsertData(
                 table: "UserGroup",
                 columns: new[] { "GroupId", "UserId" },
                 values: new object[,]
@@ -236,6 +300,53 @@ namespace DALTestsDB.Migrations
                     { 2, 3 },
                     { 2, 4 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Answer",
+                columns: new[] { "Id", "IsCorrect", "TaskId", "Text" },
+                values: new object[,]
+                {
+                    { 1, false, 1, "1" },
+                    { 2, false, 1, "2" },
+                    { 3, false, 1, "3" },
+                    { 4, true, 1, "4" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Body",
+                columns: new[] { "Id", "TaskId", "Text" },
+                values: new object[] { 1, 1, "2+2 =" });
+
+            migrationBuilder.InsertData(
+                table: "ChooseFromListTask",
+                column: "Id",
+                value: 1);
+
+            migrationBuilder.InsertData(
+                table: "TestAssignedUser",
+                columns: new[] { "Id", "TestAssignedId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1, 2 },
+                    { 2, 1, 3 },
+                    { 3, 1, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TextAnswer",
+                column: "Id",
+                values: new object[]
+                {
+                    1,
+                    2,
+                    3,
+                    4
+                });
+
+            migrationBuilder.InsertData(
+                table: "TextBody",
+                column: "Id",
+                value: 1);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Answer_TaskId",
@@ -254,6 +365,21 @@ namespace DALTestsDB.Migrations
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TestAssigned_TestId",
+                table: "TestAssigned",
+                column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestAssignedUser_TestAssignedId",
+                table: "TestAssignedUser",
+                column: "TestAssignedId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestAssignedUser_UserId",
+                table: "TestAssignedUser",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserGroup_GroupId",
                 table: "UserGroup",
                 column: "GroupId");
@@ -266,6 +392,9 @@ namespace DALTestsDB.Migrations
                 name: "ChooseFromListTask");
 
             migrationBuilder.DropTable(
+                name: "TestAssignedUser");
+
+            migrationBuilder.DropTable(
                 name: "TextAnswer");
 
             migrationBuilder.DropTable(
@@ -273,6 +402,9 @@ namespace DALTestsDB.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserGroup");
+
+            migrationBuilder.DropTable(
+                name: "TestAssigned");
 
             migrationBuilder.DropTable(
                 name: "Answer");

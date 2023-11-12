@@ -15,16 +15,33 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding TestsAssigned}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Add" Command="{Binding AddCommand}"/>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding TestsAssigned}" Grid.Row="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Title" Binding="{Binding TestAssigned.Test.Title}"/>
-                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding TestAssigned.Test.Description}"/>
-                <DataGridTextColumn Header="Start At" Binding="{Binding TestAssigned.StartAt}"/>
-                <DataGridTextColumn Header="Active time" Binding="{Binding TestAssigned.ActiveTime}"/>
-                <DataGridTextColumn Header="End At" Binding="{Binding TestAssigned.EndAt}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding TestAssigned.Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Users count" Binding="{Binding TestAssigned.UserTests.Count}"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Test.Title}"/>
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Test.Description}"/>
+                <DataGridTextColumn Header="Start At" Binding="{Binding StartAt}"/>
+                <DataGridTextColumn Header="Active time" Binding="{Binding ActiveTime}"/>
+                <DataGridTextColumn Header="End At" Binding="{Binding EndAt}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Users count" Binding="{Binding Users.Count}"/>
+                <DataGridTemplateColumn Header="Control">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Edit" Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                <Button Content="Remove" Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

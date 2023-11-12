@@ -30,7 +30,7 @@ namespace TestLib.Abstractions
         public Body Body { get; set; } = null!;
         public ICollection<Answer> Answers { get; set; } = null!;
 
-
+        public abstract double GetGrade(IEnumerable<Answer> answers);
         public abstract bool CheckAnswers(ICollection<Answer> answers);
     }
 }

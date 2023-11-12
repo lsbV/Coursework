@@ -29,6 +29,6 @@ namespace Repository
 
         public Task LoadAssociatedCollectionAsync(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression);
 
-        public Task LoadAssociatedPropertyAsync(TEntity entity, Expression<Func<TEntity, object>> expression);
+        public Task LoadAssociatedPropertyAsync(TEntity entity, Expression<Func<TEntity, object?>> expression);
     }
 }

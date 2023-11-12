@@ -34,5 +34,22 @@ namespace TestLib.Classes.Tasks
         {
             throw new NotImplementedException();
         }
+
+        public override double GetGrade(IEnumerable<Answer> answers)
+        {
+            if(answers == null)
+            {
+                throw new ArgumentNullException(nameof(answers));
+            }
+            if(answers.Count() != 1)
+            {
+                throw new ArgumentException("ChooseFromListTask can have only one answer");
+            }
+            if(Answers.Single(a => a.IsCorrect) == answers.Single())
+            {
+                return Point;
+            }
+            return 0;
+        }
     }
 }

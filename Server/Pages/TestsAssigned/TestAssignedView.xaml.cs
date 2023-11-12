@@ -24,5 +24,35 @@ namespace Server.Pages.TestsAssigned
         {
             InitializeComponent();
         }
+       
+       
+        public override void EndInit()
+        {
+            base.EndInit();
+            if(DataContext is not null )
+            {
+                if(DataContext is TestAssignedViewModel vm)
+                {
+                    day.Value = vm.ActiveTime.Days;
+                    hour.Value = vm.ActiveTime.Hours;
+                    minute.Value = vm.ActiveTime.Minutes;
+                }
+                else
+                {
+                    throw new ArgumentException("DataContext is not TestAssignedViewModel");
+                }
+            }
+        }
+        private void TimeSpan_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if(DataContext is not null 
+                && DataContext is TestAssignedViewModel vm 
+                && day.Value is not null 
+                && hour.Value is not null 
+                && minute.Value is not null)
+            {
+                vm.ActiveTime = new TimeSpan((int)day.Value, (int)hour.Value, (int)minute.Value, 0);
+            }
+        }
     }
 }

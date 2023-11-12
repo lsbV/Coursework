@@ -10,6 +10,6 @@ namespace Server.Pages.Application
 {
     public abstract class BaseViewModel : ObservableObject
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

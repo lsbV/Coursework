@@ -8,6 +8,7 @@ using Server.Pages.Application;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Server.Pages.Groups
@@ -18,6 +19,8 @@ namespace Server.Pages.Groups
         private Group group;
         private ViewMode mode;
         #endregion Fields
+
+
         #region ObservableProperties
         [ObservableProperty] string name = string.Empty;
         [ObservableProperty] string? description = string.Empty;
@@ -26,26 +29,24 @@ namespace Server.Pages.Groups
         [ObservableProperty] ObservableCollection<User> users;
         [ObservableProperty] ObservableCollection<User> allUsers;
         #endregion ObservableProperties
-        #region Properties
-        #endregion Properties
+        
+
         #region Constructors
         public GroupViewModel()
         {
-            group = null!;
-            Name = "User";
-            mode = ViewMode.Create;
-            //AllUsers = new ();
-            Users = new ();
-
+            this.group = null!;
+            base.Name = "New group";
+            this.mode = ViewMode.Create;
+            this.Users = new ();
+            this.AllUsers = null!;
         }
         public GroupViewModel(Group group) : this()
         {
-            Name = "Group";
+            base.Name = $"Group {group.Name}";
             InitFields(group);
-        }
-
-        
+        }        
         #endregion Constructors
+
 
         #region Commands
         [RelayCommand]
@@ -58,18 +59,18 @@ namespace Server.Pages.Groups
             }
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repoGroup = uow.Repository<Group>();
-            var repoUser = uow.Repository<User>();
-            Group group = CreateGroup();
+            Group group = await CreateGroup(uow);
             if (mode == ViewMode.Create)
             {
                 await repoGroup.AddAsync(group);
             }
-            else
+            else if(mode == ViewMode.Edit)
             {
                 await repoGroup.UpdateAsync(group);
             }
             WeakReferenceMessenger.Default.Send(group);
         }
+
         [RelayCommand]
         private void AddUser(object param)
         {
@@ -80,27 +81,49 @@ namespace Server.Pages.Groups
             }
             Users.Add(user);
         }
+
         [RelayCommand] 
         private void RemoveUser(object param)
         {
             User user = (User)param;
             Users.Remove(user);
         }
+
+        [RelayCommand]
+        private static void Cancel()
+        {
+            WeakReferenceMessenger.Default.Send(new Group());
+        }
         #endregion Commands
 
+
         #region Methods
-        private Group CreateGroup()
+        private async Task<Group> CreateGroup(IGenericUnitOfWork uow)
         {
             Group group = this.group ?? new();
-            group.Name = Name;
+            group.Name = this.Name;
             group.Description = Description;
             group.IsArchived = IsArchived;
-            group.CreatedAt = CreatedAt;            
+            group.CreatedAt = CreatedAt;
+            if(mode == ViewMode.Create)
+            {
+                group.Users = Users.ToList();
+            }
+            else if(mode == ViewMode.Edit)
+            {
+                var usersId = Users.Select(u => u.Id).ToArray();
+                var newUsers = await uow.Repository<User>().FindAllAsync(x=>usersId.Contains(x.Id));
+                group.Users = null!;
+                await uow.Repository<Group>().LoadAssociatedCollectionAsync(group, g => g.Users);
+                group.Users.Clear();
+                group.Users.AddRange(newUsers);    
+            }
             return group;
         }
+
         private bool ValidateData(out string ErrorMessage)
         {
-            if(string.IsNullOrWhiteSpace(Name))
+            if(string.IsNullOrWhiteSpace(this.Name))
             {
                 ErrorMessage = "Name is empty";
                 return false;
@@ -113,12 +136,14 @@ namespace Server.Pages.Groups
             ErrorMessage = string.Empty;
             return true;
         }
-        public async Task<IEnumerable<User>> LoadAllUsersAsync()
+
+        public static async Task<IEnumerable<User>> LoadAllUsersAsync()
         {
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repoUser = uow.Repository<User>();
             return await repoUser.GetAllAsync();
         }
+
         public async Task<IEnumerable<User>> LoadUsersForGroupAsync()
         {
             using var uow = DI.Create<IGenericUnitOfWork>();
@@ -129,18 +154,18 @@ namespace Server.Pages.Groups
         private void InitFields(Group group)
         {
             this.group = group;
-            mode = ViewMode.Edit;
-            Name += $" {group.Name}";
-            Description = group.Description;
-            IsArchived = group.IsArchived;
-            CreatedAt = group.CreatedAt;
-            Task.Run(async () => Users = new(await LoadUsersForGroupAsync()));
+            this.mode = ViewMode.Edit;
+            this.Name += group.Name;
+            this.Description = group.Description;
+            this.IsArchived = group.IsArchived;
+            this.CreatedAt = group.CreatedAt;
+            Task.Run(async () => this.Users = new(await LoadUsersForGroupAsync()));
         }
 
         public async Task UpdateAsynk()
         {
             var users = await LoadAllUsersAsync();
-            AllUsers = new(users);
+            this.AllUsers = new(users);
         }
         #endregion Methods
     }

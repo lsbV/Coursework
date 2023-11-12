@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Server.Pages.TestsAssigned
 {
-    public partial class AllTestAssignedViewModel : BaseViewModel, IUpdateable
+    public partial class AllTestAssignedViewModel : BaseViewModel, IUpdateable, IRecipient<TestAssigned>
     {
         #region ObservableProperties
         [ObservableProperty] ObservableCollection<TestAssigned> testsAssigned;
@@ -26,6 +26,7 @@ namespace Server.Pages.TestsAssigned
         {
             Name = "Tests assigned";
             TestsAssigned = new();
+            WeakReferenceMessenger.Default.Register<TestAssigned>(this);
         }
         #endregion Constructors
 
@@ -65,7 +66,16 @@ namespace Server.Pages.TestsAssigned
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repo = uow.Repository<TestAssigned>();
             var tests = await repo.GetAllAsync();
+            foreach(var test in tests)
+            {
+                await repo.LoadAssociatedPropertyAsync(test, t=>t.Test);
+            }
             TestsAssigned = new(tests);
+        }
+
+        public void Receive(TestAssigned message)
+        {
+            WeakReferenceMessenger.Default.Send(this as BaseViewModel);
         }
         #endregion Methods
     }

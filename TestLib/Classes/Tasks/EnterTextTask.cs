@@ -9,5 +9,10 @@ namespace TestLib.Classes.Tasks
         {
             throw new NotImplementedException();
         }
+
+        public override double GetGrade(IEnumerable<Answer> answers)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

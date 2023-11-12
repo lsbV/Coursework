@@ -18,5 +18,10 @@ namespace TestLib.Classes.Answers
         {
             return new ImageAnswer(IsCorrect, Text, (Image)Image.Clone());
         }
+
+        public override int CompareTo(Answer? other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

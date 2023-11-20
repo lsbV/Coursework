@@ -1,32 +1,28 @@
 ﻿using System.Drawing;
 using TestLib.Abstractions;
+using TestLib.Classes.Enums;
 
 namespace TestLib.Classes.Answers
 {
     public class ImageAnswer : Answer
     {
-        public Image Image { get; set; }
-
-        public ImageAnswer(bool isCorrect, string text, Image image)
-        {
-            IsCorrect = isCorrect;
-            Text = text;
-            Image = image;
-        }
-
+        public required string ImagePath { get; set; }
+        public required int ImageLength { get; set; }
         public override object Clone()
         {
-            return new ImageAnswer(IsCorrect, Text, (Image)Image.Clone());
+            return new ImageAnswer() { Id = Id, IsCorrect = IsCorrect, TaskId = TaskId, Text = Text, Task = null, ImageLength = ImageLength, ImagePath = ImagePath };
         }
 
         public override int CompareTo(Answer? other)
         {
-            throw new NotImplementedException();
+           if(this.Text == other?.Text)
+                return 0;
+            return 1;
         }
 
         public override Answer GetClearAnswer()
         {
-            throw new NotImplementedException();
+            return new ImageAnswer() { Id = Id, IsCorrect = false, TaskId = TaskId, Text = Text, Task = null, ImageLength = ImageLength, ImagePath = ImagePath };
         }
     }
 }

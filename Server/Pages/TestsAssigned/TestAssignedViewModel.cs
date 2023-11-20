@@ -12,6 +12,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TestLib;
+using TestLib.Classes.Enums;
 using TestLib.Classes.Test;
 
 namespace Server.Pages.TestsAssigned
@@ -20,6 +22,7 @@ namespace Server.Pages.TestsAssigned
     {
         #region Fields
         private readonly ViewMode viewMode;
+        private readonly IMessenger messenger;
         #endregion Fields
 
         #region ObservableProperties
@@ -45,15 +48,16 @@ namespace Server.Pages.TestsAssigned
 
 
         #region Constructors
-        public TestAssignedViewModel()
+        public TestAssignedViewModel(IMessenger messenger)
         {
             viewMode = ViewMode.Create;
             Users = new();
             AllUsers = null!;
             AllTests = null!;
             test = null!;
+            this.messenger = messenger;
         }
-        public TestAssignedViewModel(TestAssigned testAssigned) : this()
+        public TestAssignedViewModel(TestAssigned testAssigned, IMessenger messenger) : this(messenger)
         {
             viewMode = ViewMode.Edit;
             InitFields(testAssigned);
@@ -194,10 +198,10 @@ namespace Server.Pages.TestsAssigned
             this.StartAt = testAssigned.StartAt;
             this.TimeToTake = testAssigned.TimeToTake;
             this.CreatedAt = testAssigned.CreatedAt;
-            Task.Run(async () => {
+            Task.Run(() => {
                 using var uow = DI.Create<IGenericUnitOfWork>();
                 var repo = uow.Repository<TestAssigned>();
-                await repo.LoadAssociatedCollectionAsync(testAssigned, x => x.Users);
+                repo.LoadAssociatedCollection(testAssigned, x => x.Users);
                 Users = new(testAssigned.Users);
             });
         }

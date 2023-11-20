@@ -5,14 +5,28 @@ namespace TestLib.Classes.Tasks
 {
     public class EnterTextTask : Task 
     { 
-        public override bool CheckAnswers(ICollection<Answer> answers)
+        
+        public override Task GetClearTask()
         {
-            throw new NotImplementedException();
+            var clearAnswers = Answers.Select(x => x.GetClearAnswer()).ToList();
+            return new EnterTextTask() { Id = Id, Answers = clearAnswers, Body = (Body)Body.Clone(), BodyId = BodyId, Description = Description, Point = Point, Test = null!, TestId = TestId };
         }
 
-        public override double GetGrade(IEnumerable<Answer> answers)
+        public override double GetGrade(List<Answer> answers)
         {
-            throw new NotImplementedException();
+            if (answers == null)
+            {
+                throw new ArgumentNullException(nameof(answers));
+            }
+            if (answers.Count() != 1)
+            {
+                throw new ArgumentException("EnterTextTask can have only one answer");
+            }
+            if (Answers.Single(a => a.IsCorrect).Text == answers.Single().Text)
+            {
+                return Point;
+            }
+            return 0;
         }
     }
 }

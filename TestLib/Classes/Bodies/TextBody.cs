@@ -4,7 +4,7 @@ namespace TestLib.Classes.Bodies
 {
     public class TextBody : Body
     {
-        public TextBody(string? text)
+        public TextBody(string text)
         {
             Text = text;
         }
@@ -14,7 +14,7 @@ namespace TestLib.Classes.Bodies
         }
         public override object Clone()
         {
-            return MemberwiseClone();
+            return new TextBody() { Text = Text, Id = Id, TaskId = TaskId, Task = null! };
         }
     }
 }

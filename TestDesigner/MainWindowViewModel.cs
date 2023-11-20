@@ -60,7 +60,7 @@ namespace TestDesigner
                 Author = Author,
                 Description = Description,
                 InfoForTestTaker = InfoForTestTaker,
-                Tasks = Tasks.ToArray(),
+                Tasks = Tasks.ToList(),
                 PassingPercent = MinPoints
             };
             var isSaved = FileExplorerProvider.SaveFile(test, path);

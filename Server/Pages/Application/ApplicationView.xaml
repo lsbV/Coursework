@@ -7,7 +7,8 @@
              xmlns:users="clr-namespace:Server.Pages.Users" 
              xmlns:groups="clr-namespace:Server.Pages.Groups"
              xmlns:testsAssigned="clr-namespace:Server.Pages.TestsAssigned"
-             xmlns:tests="clr-namespace:Server.Pages.Tests"        
+             xmlns:tests="clr-namespace:Server.Pages.Tests" 
+             xmlns:listener="clr-namespace:Server.Pages.Listener"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=local:ApplicationViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -35,6 +36,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type testsAssigned:TestAssignedViewModel}">
             <testsAssigned:TestAssignedView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type listener:ListenerViewModel}">
+            <listener:ListenerView/>
         </DataTemplate>
     </Window.Resources>
     <Grid>

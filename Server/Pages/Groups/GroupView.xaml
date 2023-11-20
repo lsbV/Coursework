@@ -10,96 +10,127 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <StackPanel.Resources>
-                <Style TargetType="Label">
-                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                    <Setter Property="FontSize" Value="20" />
-                    <Setter Property="Margin" Value="10"/>
-                </Style>
-                <Style TargetType="DockPanel">
-                    <Setter Property="LastChildFill" Value="True"/>
-                    <Setter Property="Margin" Value="10"/>
-                </Style>
-            </StackPanel.Resources>
-            <DockPanel>
-                <Label Content="Name" DockPanel.Dock="Left"/>
-                <xceed:WatermarkTextBox Text="{Binding Name}" Watermark="Name"/>
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Description" DockPanel.Dock="Left"/>
-                <xceed:WatermarkTextBox Text="{Binding Description}" Watermark="Description"/>
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Archived" DockPanel.Dock="Left"/>
-                <CheckBox IsChecked="{Binding IsArchived}" />
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Created" DockPanel.Dock="Left"/>
-                <Label Content="{Binding CreatedAt}" />
-            </DockPanel>
-        </StackPanel>
-        <ListBox ItemsSource="{Binding Users}" Grid.Row="1" HorizontalContentAlignment="Stretch">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border>
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="BorderBrush" Value="Black"/>
-                                <Setter Property="BorderThickness" Value="1"/>
-                                <Setter Property="Padding" Value="10"/>
-                                <Setter Property="Margin" Value="2"/>
-                            </Style>
-                        </Border.Style>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding FirstName}"/>
-                            <TextBlock Text="{Binding LastName}" Grid.Column="1"/>
-                            <TextBlock Text="{Binding Login}" Grid.Column="2"/>
-                            <Button Content="Remove" Command="{Binding DataContext.RemoveUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <ListBox ItemsSource="{Binding AllUsers}" Grid.Row="2" HorizontalContentAlignment="Stretch">
-            <ListBox.ItemTemplate>
-                <DataTemplate>                    
-                    <Border HorizontalAlignment="Stretch">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="BorderBrush" Value="Black"/>
-                                <Setter Property="BorderThickness" Value="1"/>
-                                <Setter Property="Padding" Value="10"/>
-                                <Setter Property="Margin" Value="2"/>
-                            </Style>
-                        </Border.Style>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding FirstName}"/>
-                            <TextBlock Text="{Binding LastName}" Grid.Column="1"/>
-                            <TextBlock Text="{Binding Login}" Grid.Column="2"/>
-                            <Button Content="Add" Command="{Binding DataContext.AddUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="General"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                        <StackPanel Grid.Row="0">
+                            <StackPanel.Resources>
+                                <Style TargetType="Label">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="FontSize" Value="20" />
+                                    <Setter Property="Margin" Value="10"/>
+                                </Style>
+                                <Style TargetType="DockPanel">
+                                    <Setter Property="LastChildFill" Value="True"/>
+                                    <Setter Property="Margin" Value="10"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <DockPanel>
+                                <Label Content="Name" DockPanel.Dock="Left"/>
+                                <xceed:WatermarkTextBox Text="{Binding Name}" Watermark="Name"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Description" DockPanel.Dock="Left"/>
+                                <xceed:WatermarkTextBox Text="{Binding Description}" Watermark="Description"/>
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Archived" DockPanel.Dock="Left"/>
+                                <CheckBox IsChecked="{Binding IsArchived}" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Created" DockPanel.Dock="Left"/>
+                                <Label Content="{Binding CreatedAt}" />
+                            </DockPanel>
+                        </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Users"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                        <ListBox ItemsSource="{Binding Users}" HorizontalContentAlignment="Stretch">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderBrush" Value="Black"/>
+                                                <Setter Property="BorderThickness" Value="1"/>
+                                                <Setter Property="Padding" Value="10"/>
+                                                <Setter Property="Margin" Value="2"/>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding FirstName}"/>
+                                            <TextBlock Text="{Binding LastName}" Grid.Column="1"/>
+                                            <TextBlock Text="{Binding Login}" Grid.Column="2"/>
+                                            <Button Content="Remove" Command="{Binding DataContext.RemoveUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="All users"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <ListBox ItemsSource="{Binding AllUsers}" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border HorizontalAlignment="Stretch">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="BorderBrush" Value="Black"/>
+                                            <Setter Property="BorderThickness" Value="1"/>
+                                            <Setter Property="Padding" Value="10"/>
+                                            <Setter Property="Margin" Value="2"/>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding FirstName}"/>
+                                        <TextBlock Text="{Binding LastName}" Grid.Column="1"/>
+                                        <TextBlock Text="{Binding Login}" Grid.Column="2"/>
+                                        <Button Content="Add" Command="{Binding DataContext.AddUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Grid.Column="3"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+        
+        
+        
+        
+       
+        
+        
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

@@ -106,5 +106,18 @@ namespace Server.Infrastructure
                 return RewriteFile(path, json);
             }
         }
+
+        public string? SaveFileDialog()
+        {
+            SaveFileDialog saveFileDialog = new();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                return saveFileDialog.FileName;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

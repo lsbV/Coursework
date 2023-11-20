@@ -22,7 +22,7 @@ namespace DALTestsDB.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DALTestsDB.Group", b =>
+            modelBuilder.Entity("DALTestsDB.Model.TestAssignedUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,94 +30,11 @@ namespace DALTestsDB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsArchived")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Group");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Admins group",
-                            IsArchived = false,
-                            Name = "Admins"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Users group",
-                            IsArchived = false,
-                            Name = "Users"
-                        });
-                });
-
-            modelBuilder.Entity("DALTestsDB.TestAssigned", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EndAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("StartAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TestId")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("TimeToTake")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TestId");
-
-                    b.ToTable("TestAssigned");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndAt = new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsArchived = false,
-                            StartAt = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TestId = 1,
-                            TimeToTake = new TimeSpan(0, 1, 0, 0, 0)
-                        });
-                });
-
-            modelBuilder.Entity("DALTestsDB.TestAssignedUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("TestAssignedId")
                         .HasColumnType("int");
@@ -137,111 +54,38 @@ namespace DALTestsDB.Migrations
                         new
                         {
                             Id = 1,
+                            AppointmentDate = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
                             TestAssignedId = 1,
                             UserId = 2
                         },
                         new
                         {
                             Id = 2,
+                            AppointmentDate = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
                             TestAssignedId = 1,
                             UserId = 3
                         },
                         new
                         {
                             Id = 3,
+                            AppointmentDate = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = false,
                             TestAssignedId = 1,
                             UserId = 4
-                        });
-                });
-
-            modelBuilder.Entity("DALTestsDB.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2000, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Admin",
-                            IsArchived = false,
-                            LastName = "Admin",
-                            Login = "admin",
-                            Password = "admin",
-                            Role = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2000, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "User",
-                            IsArchived = false,
-                            LastName = "User",
-                            Login = "user",
-                            Password = "user",
-                            Role = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2000, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "User1",
-                            IsArchived = true,
-                            LastName = "User1",
-                            Login = "user1",
-                            Password = "user1",
-                            Role = 1
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2000, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "User2",
-                            IsArchived = false,
-                            LastName = "User2",
-                            Login = "user2",
-                            Password = "user2",
-                            Role = 1
+                            AppointmentDate = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsActive = true,
+                            TestAssignedId = 1,
+                            UserId = 1
                         });
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserAnswerResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserAnswerResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -262,29 +106,46 @@ namespace DALTestsDB.Migrations
                     b.HasIndex("UserTaskResultId");
 
                     b.ToTable("UserAnswerResults");
+                });
+
+            modelBuilder.Entity("DALTestsDB.Model.UserGroup", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "GroupId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("UserGroup");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            AnswerId = 1,
-                            UserTaskResultId = 1
+                            UserId = 1,
+                            GroupId = 1
                         },
                         new
                         {
-                            Id = 2,
-                            AnswerId = 2,
-                            UserTaskResultId = 2
+                            UserId = 2,
+                            GroupId = 2
                         },
                         new
                         {
-                            Id = 3,
-                            AnswerId = 3,
-                            UserTaskResultId = 3
+                            UserId = 3,
+                            GroupId = 2
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            GroupId = 2
                         });
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserTaskResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserTaskResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -305,29 +166,9 @@ namespace DALTestsDB.Migrations
                     b.HasIndex("UserTestResultId");
 
                     b.ToTable("UserTaskResults");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            TaskId = 1,
-                            UserTestResultId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            TaskId = 1,
-                            UserTestResultId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            TaskId = 1,
-                            UserTestResultId = 3
-                        });
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserTestResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserTestResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -347,26 +188,6 @@ namespace DALTestsDB.Migrations
                         .IsUnique();
 
                     b.ToTable("UserTestResult");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            PassageDate = new DateTime(2023, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TestAssignedUserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            PassageDate = new DateTime(2023, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TestAssignedUserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            PassageDate = new DateTime(2023, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TestAssignedUserId = 3
-                        });
                 });
 
             modelBuilder.Entity("TestLib.Abstractions.Answer", b =>
@@ -380,7 +201,7 @@ namespace DALTestsDB.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("TaskId")
+                    b.Property<int?>("TaskId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -408,6 +229,7 @@ namespace DALTestsDB.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -501,40 +323,181 @@ namespace DALTestsDB.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TestLib.Interfaces.UserGroup", b =>
+            modelBuilder.Entity("TestLib.Group", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.HasKey("UserId", "GroupId");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("GroupId");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("UserGroup");
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Group");
 
                     b.HasData(
                         new
                         {
-                            UserId = 1,
-                            GroupId = 1
+                            Id = 1,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Admins group",
+                            IsArchived = false,
+                            Name = "Admins"
                         },
                         new
                         {
-                            UserId = 2,
-                            GroupId = 2
+                            Id = 2,
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Users group",
+                            IsArchived = false,
+                            Name = "Users"
+                        });
+                });
+
+            modelBuilder.Entity("TestLib.TestAssigned", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("TimeToTake")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestId");
+
+                    b.ToTable("TestAssigned");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndAt = new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsArchived = false,
+                            StartAt = new DateTime(2023, 12, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TestId = 1,
+                            TimeToTake = new TimeSpan(0, 1, 0, 0, 0)
+                        });
+                });
+
+            modelBuilder.Entity("TestLib.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Login");
+
+                    b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2000, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Admin",
+                            IsArchived = false,
+                            LastName = "Admin",
+                            Login = "admin",
+                            Password = "�iv�A���M�߱g��s�K��o*�H�",
+                            Role = 0
                         },
                         new
                         {
-                            UserId = 3,
-                            GroupId = 2
+                            Id = 2,
+                            CreatedAt = new DateTime(2000, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "User",
+                            IsArchived = false,
+                            LastName = "User",
+                            Login = "user",
+                            Password = "��m�c��i��� ui��5Hmڲ��[���",
+                            Role = 1
                         },
                         new
                         {
-                            UserId = 4,
-                            GroupId = 2
+                            Id = 3,
+                            CreatedAt = new DateTime(2000, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "User1",
+                            IsArchived = true,
+                            LastName = "User1",
+                            Login = "user1",
+                            Password = "\n�bʤ��5g���� x}��C=���xʿΐ",
+                            Role = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2000, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "User2",
+                            IsArchived = false,
+                            LastName = "User2",
+                            Login = "user2",
+                            Password = "`%я䊽E�(��eݘ�!�J��a�Ap9�",
+                            Role = 1
                         });
                 });
 
@@ -572,6 +535,58 @@ namespace DALTestsDB.Migrations
                             IsCorrect = true,
                             TaskId = 1,
                             Text = "4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsCorrect = false,
+                            TaskId = 2,
+                            Text = "1"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsCorrect = false,
+                            TaskId = 2,
+                            Text = "2"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsCorrect = false,
+                            TaskId = 2,
+                            Text = "3"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsCorrect = true,
+                            TaskId = 2,
+                            Text = "4"
+                        });
+                });
+
+            modelBuilder.Entity("TestLib.Classes.Bodies.ImageBody", b =>
+                {
+                    b.HasBaseType("TestLib.Abstractions.Body");
+
+                    b.Property<int>("ImageLength")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("ImageBody");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            TaskId = 2,
+                            Text = "",
+                            ImageLength = 3993,
+                            ImagePath = "/Messenger-icon.png"
                         });
                 });
 
@@ -604,29 +619,26 @@ namespace DALTestsDB.Migrations
                             Description = "ChooseFromListTask",
                             Point = 10.0,
                             TestId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BodyId = 2,
+                            Description = "ChooseFromListTask",
+                            Point = 10.0,
+                            TestId = 1
                         });
                 });
 
-            modelBuilder.Entity("DALTestsDB.TestAssigned", b =>
+            modelBuilder.Entity("DALTestsDB.Model.TestAssignedUser", b =>
                 {
-                    b.HasOne("TestLib.Classes.Test.Test", "Test")
-                        .WithMany()
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Test");
-                });
-
-            modelBuilder.Entity("DALTestsDB.TestAssignedUser", b =>
-                {
-                    b.HasOne("DALTestsDB.TestAssigned", "TestAssigned")
+                    b.HasOne("TestLib.TestAssigned", "TestAssigned")
                         .WithMany()
                         .HasForeignKey("TestAssignedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DALTestsDB.User", "User")
+                    b.HasOne("TestLib.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -637,7 +649,7 @@ namespace DALTestsDB.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserAnswerResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserAnswerResult", b =>
                 {
                     b.HasOne("TestLib.Abstractions.Answer", "Answer")
                         .WithMany()
@@ -645,7 +657,7 @@ namespace DALTestsDB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DALTestsDB.UserTaskResult", "UserTaskResult")
+                    b.HasOne("DALTestsDB.Model.UserTaskResult", "UserTaskResult")
                         .WithMany("UserAnswerResults")
                         .HasForeignKey("UserTaskResultId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -656,7 +668,26 @@ namespace DALTestsDB.Migrations
                     b.Navigation("UserTaskResult");
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserTaskResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserGroup", b =>
+                {
+                    b.HasOne("TestLib.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TestLib.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DALTestsDB.Model.UserTaskResult", b =>
                 {
                     b.HasOne("TestLib.Abstractions.Task", "Task")
                         .WithMany()
@@ -664,7 +695,7 @@ namespace DALTestsDB.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("DALTestsDB.UserTestResult", "UserTestResult")
+                    b.HasOne("DALTestsDB.Model.UserTestResult", "UserTestResult")
                         .WithMany("UserTaskResults")
                         .HasForeignKey("UserTestResultId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -675,11 +706,11 @@ namespace DALTestsDB.Migrations
                     b.Navigation("UserTestResult");
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserTestResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserTestResult", b =>
                 {
-                    b.HasOne("DALTestsDB.TestAssignedUser", "TestAssignedUser")
+                    b.HasOne("DALTestsDB.Model.TestAssignedUser", "TestAssignedUser")
                         .WithOne()
-                        .HasForeignKey("DALTestsDB.UserTestResult", "TestAssignedUserId")
+                        .HasForeignKey("DALTestsDB.Model.UserTestResult", "TestAssignedUserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -691,8 +722,7 @@ namespace DALTestsDB.Migrations
                     b.HasOne("TestLib.Abstractions.Task", "Task")
                         .WithMany("Answers")
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Task");
                 });
@@ -719,23 +749,15 @@ namespace DALTestsDB.Migrations
                     b.Navigation("Test");
                 });
 
-            modelBuilder.Entity("TestLib.Interfaces.UserGroup", b =>
+            modelBuilder.Entity("TestLib.TestAssigned", b =>
                 {
-                    b.HasOne("DALTestsDB.Group", "Group")
+                    b.HasOne("TestLib.Classes.Test.Test", "Test")
                         .WithMany()
-                        .HasForeignKey("GroupId")
+                        .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DALTestsDB.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("User");
+                    b.Navigation("Test");
                 });
 
             modelBuilder.Entity("TestLib.Classes.Answers.TextAnswer", b =>
@@ -743,6 +765,15 @@ namespace DALTestsDB.Migrations
                     b.HasOne("TestLib.Abstractions.Answer", null)
                         .WithOne()
                         .HasForeignKey("TestLib.Classes.Answers.TextAnswer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TestLib.Classes.Bodies.ImageBody", b =>
+                {
+                    b.HasOne("TestLib.Abstractions.Body", null)
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Bodies.ImageBody", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -765,12 +796,12 @@ namespace DALTestsDB.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserTaskResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserTaskResult", b =>
                 {
                     b.Navigation("UserAnswerResults");
                 });
 
-            modelBuilder.Entity("DALTestsDB.UserTestResult", b =>
+            modelBuilder.Entity("DALTestsDB.Model.UserTestResult", b =>
                 {
                     b.Navigation("UserTaskResults");
                 });

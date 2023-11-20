@@ -4,8 +4,9 @@ namespace TestLib.Abstractions
 {
     public interface IFileExplorerProvider
     {
-        public TEntity OpenFile<TEntity>(string path);
-        public bool SaveFile<TEntity>(TEntity entity, string path);
-        public string? OpenFileDialog();
+        TEntity OpenFile<TEntity>(string path);
+        bool SaveFile<TEntity>(TEntity entity, string path);
+        string? OpenFileDialog();
+        string? SaveFileDialog();
     }
 }

@@ -30,6 +30,7 @@ namespace Repository
             await context.SaveChangesAsync();
         }
 
+
         public IEnumerable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate)
         {
             return dbSet.Where(predicate).ToList();
@@ -39,6 +40,7 @@ namespace Repository
         {
             return await dbSet.Where(predicate).ToArrayAsync();            
         }
+
 
         public TEntity? FindById(params object[] id)
         {
@@ -50,6 +52,7 @@ namespace Repository
             return await dbSet.FindAsync(id);
         }
 
+
         public IEnumerable<TEntity> GetAll()
         {
             return dbSet.ToList();
@@ -59,6 +62,7 @@ namespace Repository
         {
             return await dbSet.ToListAsync();
         }
+
 
         public void Remove(TEntity entity)
         {
@@ -72,6 +76,7 @@ namespace Repository
             await context.SaveChangesAsync();
         }
 
+
         public void Update(TEntity entity)
         {
             context.Entry(entity).State = EntityState.Modified;
@@ -84,40 +89,41 @@ namespace Repository
             await context.SaveChangesAsync();
         }
 
-        public IEnumerable<TEntity> LoadCollection(Expression<Func<TEntity, bool>> filter, params Expression<Func<TEntity, object>>[] includes)
-        {
-            var query = dbSet.AsQueryable();
 
-            if (includes != null)
-            {
-                query = includes.Aggregate(query, (current, include) => current.Include(include));
-            }
-
-            return query.Where(filter).ToList();
-        }
-        //public async Task LoadAssociatedCollectionAsync(TEntity entity, string propertyName)
-        //{
-        //    dbSet.Attach(entity);
-        //    await dbSet.Entry(entity).Collection(propertyName).LoadAsync();
-        //}
         public async Task LoadAssociatedCollectionAsync(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression)
         {
-
             context.Attach(entity);
             await context.Entry(entity).Collection(expression).LoadAsync();
-            //await dbSet.Entry(entity).Collection(expression).LoadAsync();
         }
-        //public async Task LoadAssociatedCollection(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression, Expression<Func<object, object>> thenInclude)
-        //{
-        //    dbSet.Attach(entity);
-        //    await dbSet.Entry(entity).Collection(expression).Query().Include(thenInclude).LoadAsync();
-        //}
+        public void LoadAssociatedCollection(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression)
+        {
+            context.Attach(entity);
+            context.Entry(entity).Collection(expression).Load();
+        }
+
+
+        public async Task LoadAssociatedCollectionAsync(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression, Expression<Func<object, object>> thenInclude)
+        {
+            dbSet.Attach(entity);
+            await dbSet.Entry(entity).Collection(expression).Query().Include(thenInclude).LoadAsync();
+        }
+        public void LoadAssociatedCollection(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression, Expression<Func<object, object>> thenInclude)
+        {
+            dbSet.Attach(entity);
+            dbSet.Entry(entity).Collection(expression).Query().Include(thenInclude).Load();
+        }
+
 
         public async Task LoadAssociatedPropertyAsync(TEntity entity, Expression<Func<TEntity, object?>> expression)
         {
             dbSet.Attach(entity);
             await dbSet.Entry(entity).Reference(expression).LoadAsync();
         }   
+        public void LoadAssociatedProperty(TEntity entity, Expression<Func<TEntity, object?>> expression)
+        {
+            dbSet.Attach(entity);
+            dbSet.Entry(entity).Reference(expression).Load();
+        }
 
     }
    

@@ -9,10 +9,6 @@ namespace Repository
         private readonly Dictionary<Type, object> repositories = new();
         private readonly object _lock = new();
 
-        public GenericUnitOfWork()
-        {
-            context = new TestDBContext();
-        }
         public GenericUnitOfWork(DbContext context)
         {
             this.context = context;

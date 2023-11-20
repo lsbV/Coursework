@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DALTestsDB;
 using Repository;
 using Server.Ninject;
 using Server.Pages.Application;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using TestLib;
 
 namespace Server.Pages.Groups
 {
@@ -17,6 +17,7 @@ namespace Server.Pages.Groups
     {
         #region Fields
         private Group group;
+        private IMessenger messenger;
         private ViewMode mode;
         #endregion Fields
 
@@ -32,15 +33,16 @@ namespace Server.Pages.Groups
         
 
         #region Constructors
-        public GroupViewModel()
+        public GroupViewModel(IMessenger messenger)
         {
             this.group = null!;
             base.Name = "New group";
             this.mode = ViewMode.Create;
             this.Users = new ();
             this.AllUsers = null!;
+            this.messenger = messenger;
         }
-        public GroupViewModel(Group group) : this()
+        public GroupViewModel(Group group, IMessenger messenger) : this(messenger)
         {
             base.Name = $"Group {group.Name}";
             InitFields(group);
@@ -68,7 +70,7 @@ namespace Server.Pages.Groups
             {
                 await repoGroup.UpdateAsync(group);
             }
-            WeakReferenceMessenger.Default.Send(group);
+            messenger.Send(group);
         }
 
         [RelayCommand]
@@ -90,9 +92,9 @@ namespace Server.Pages.Groups
         }
 
         [RelayCommand]
-        private static void Cancel()
+        private void Cancel()
         {
-            WeakReferenceMessenger.Default.Send(new Group());
+            messenger.Send(new Group());
         }
         #endregion Commands
 
@@ -108,6 +110,9 @@ namespace Server.Pages.Groups
             if(mode == ViewMode.Create)
             {
                 group.Users = Users.ToList();
+                var usersId = Users.Select(u => u.Id).ToArray();
+                var newUsers = await uow.Repository<User>().FindAllAsync(x => usersId.Contains(x.Id));
+                group.Users = newUsers.ToList();
             }
             else if(mode == ViewMode.Edit)
             {
@@ -144,11 +149,11 @@ namespace Server.Pages.Groups
             return await repoUser.GetAllAsync();
         }
 
-        public async Task<IEnumerable<User>> LoadUsersForGroupAsync()
+        public IEnumerable<User> LoadUsersForGroup()
         {
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repo = uow.Repository<Group>();
-            await repo.LoadAssociatedCollectionAsync(group, g => g.Users);
+            repo.LoadAssociatedCollection(group, g => g.Users);
             return group.Users;
         }
         private void InitFields(Group group)
@@ -159,13 +164,13 @@ namespace Server.Pages.Groups
             this.Description = group.Description;
             this.IsArchived = group.IsArchived;
             this.CreatedAt = group.CreatedAt;
-            Task.Run(async () => this.Users = new(await LoadUsersForGroupAsync()));
+            Task.Run(() => this.Users = new(LoadUsersForGroup()));
         }
 
         public async Task UpdateAsynk()
         {
             var users = await LoadAllUsersAsync();
-            this.AllUsers = new(users);
+            AllUsers = new(users);
         }
         #endregion Methods
     }

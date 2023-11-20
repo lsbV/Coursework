@@ -5,10 +5,79 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Server.Pages.Listener"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:ListenerViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="DockPanel">
+            <Setter Property="LastChildFill" Value="True"/>
+            <Setter Property="Margin" Value="0,15,0,0"/>
+        </Style>
+        <Style TargetType="Grid">
+            <Setter Property="Margin" Value="0,15,0,0"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <StackPanel>
-            <Label Content="Port" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="0">
+            <DockPanel >
+                <Label Content="Port" />
+                <TextBox Text="{Binding Port}" />
+            </DockPanel>
+            <DockPanel>
+                <Label Content="IP"/>
+                <ComboBox ItemsSource="{Binding IPAddresses}" SelectedItem="{Binding SelectedIPAddress}"/>
+            </DockPanel>
+            <!--<DockPanel>
+                <Label Content="Status"/>
+                <Label Content="{Binding Status}"/>
+            </DockPanel>-->
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Start" Command="{Binding StartCommand}"/>
+                <Button Grid.Column="1" Content="Stop" Command="{Binding StopCommand}"/>
+            </Grid>
         </StackPanel>
+        <TabControl Grid.Column="1">
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Log"/>
+                </TabItem.Header>
+                <ScrollViewer>
+                    <TextBox Text="{Binding Log}" IsReadOnly="True"/>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Clients"/>
+                </TabItem.Header>
+                <ScrollViewer>
+                    <ListView ItemsSource="{Binding Users}">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"/>
+                                    <GridViewColumn Header="Login" DisplayMemberBinding="{Binding Login}"/>
+                                    <GridViewColumn Header="IP" DisplayMemberBinding="{Binding ServerWorker.IP}"/>
+                                    <GridViewColumn>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Kick" Command="{Binding DataContext.KickCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

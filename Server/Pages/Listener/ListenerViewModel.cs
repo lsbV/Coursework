@@ -1,83 +1,120 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using DALTestsDB;
 using Newtonsoft.Json;
 using Repository;
+using Server.Infrastructure;
 using Server.Ninject;
 using Server.Pages.Application;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using TestLib;
+using TestLib.Abstractions;
+using TestLib.Classes.Logger;
 using TestLib.Classes.Network;
 using TestLib.Classes.Test;
 using Xceed.Wpf.Toolkit;
+using Task = System.Threading.Tasks.Task;
 
 namespace Server.Pages.Listener
 {
-    public partial class ListenerViewModel : BaseViewModel, IUpdateable
+    public partial class ListenerViewModel : BaseViewModel, IDisposable, IRecipient<ClientConnectedMessage>, IRecipient<ClientDisconnectedMessage>
     {
         #region Fields
-        private TcpListener listener = null!;
+        private TcpListener? listener;
+        private IEncryptor encryptor;
+        private ISerializer serializer;
+        private ILogger logger;
+        private IMessenger messenger;
         #endregion Fields
+
+
         #region ObservableProperties
         [ObservableProperty] int port;
-        //[ObservableProperty] string ip;
-        [ObservableProperty] IPAddress[] iPAddresses = null!;
-        [ObservableProperty] IPAddress selectedIPAddress = null!;
-        [ObservableProperty] ObservableCollection<User> users = null!;
+        [ObservableProperty] string log = string.Empty;
+        [ObservableProperty] IPAddress[] iPAddresses;
+        [ObservableProperty] IPAddress selectedIPAddress;
+        [ObservableProperty] ObservableCollection<ServerUser> users;
         #endregion ObservableProperties
-        #region Properties
-        #endregion Properties
+
+
         #region Constructors
-        public ListenerViewModel()
+        public ListenerViewModel(IEncryptor encryptor, ISerializer serializer, IMessenger messenger)
         {
             Name = "Listener";
-            //NetworkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            //selectedNetworkInterface = NetworkInterfaces.FirstOrDefault();
-
-        }
-
-        public async Task UpdateAsynk()
-        {
-            var host = await Dns.GetHostEntryAsync(Dns.GetHostName());
+            logger = new MethodLogger((log) => Log += DateTime.Now.ToString("HH:mm:ss.fff") + " " + log + Environment.NewLine );
+            Port = 50001;
+            var host = Dns.GetHostEntry(Dns.GetHostName());
             IPAddresses = host.AddressList;
-
+            SelectedIPAddress = IPAddresses.Last();
+            Users = new ObservableCollection<ServerUser>();
+            System.Threading.Tasks.Task.Run(Start);
+            this.encryptor = encryptor;
+            this.serializer = serializer;
+            this.messenger = messenger;
+            messenger.RegisterAll(this);
         }
         #endregion Constructors
+
+
         #region Commands
         [RelayCommand]
         private void Start()
         {
+            if(listener != null)
+            {
+                logger.Log("The listener is already running");
+                return;
+            }
             if (Validate(out string msg) == false)
             {
                 MessageBox.Show(msg);
             }
             listener = new TcpListener(SelectedIPAddress, Port);
             listener.Start();
-            //var client = await listener.AcceptTcpClientAsync();
-            //var stream = client.GetStream();
-            //var buffer = new byte[1024];
-            //var read = await stream.ReadAsync(buffer, 0, buffer.Length);
-            //var message = Encoding.UTF8.GetString(buffer, 0, read);
-            
+            logger.Log($"The listener started on {SelectedIPAddress}:{Port}");
+            System.Threading.Tasks.Task.Run(Listen);
         }
 
         [RelayCommand]
         private void Stop()
         {
+            if (listener == null)
+            {
+                logger.Log("The listener is not running");
+                return;
+            }
             listener.Stop();
+            listener = null;
         }
-
-
+        [RelayCommand]
+        private void Kick(object param)
+        {
+            ServerUser serverUser = (ServerUser)param;
+            if(UserPool.Instance.Contains(serverUser.WorkerId))
+            {
+                serverUser.CancellationSource.Cancel();
+            }
+            if(Users.Contains(serverUser))
+            {
+                Users.Remove(serverUser);
+            }
+        }
         #endregion Commands
 
 
@@ -90,17 +127,6 @@ namespace Server.Pages.Listener
                 msg = "Port is required";
                 return false;
             }
-            //if (string.IsNullOrWhiteSpace(Ip))
-            //{
-            //    msg = "IP is required";
-            //    return false;
-            //}
-            //if(IPAddress.TryParse(Ip, out var ip) == false)
-            //{
-            //    msg = "IP is not valid";
-            //    if()
-            //    return false;
-            //}
             if (SelectedIPAddress == null)
             {
                 msg = "IP is required";
@@ -112,89 +138,81 @@ namespace Server.Pages.Listener
         }
         public void Listen()
         {
-            while(true)
+            try
             {
-                var client = listener.AcceptTcpClient();
-                var stream = client.GetStream();
-                var buffer = new byte[1024];
-                var read = stream.Read(buffer, 0, buffer.Length);
-                var message = Encoding.UTF8.GetString(buffer, 0, read);
-                Console.WriteLine(message);
+                while (true)
+                {
+                    var client = listener!.AcceptTcpClient();
+                    Task.Run(async () => await ListenClient(client));
+                    //Thread.Sleep(100);
+                }
+            }   
+            catch (SocketException)
+            {
+                logger.Log("The listener stopped");
+            }
+            catch (Exception ex)
+            {
+                logger.Log(ex.Message);
             }
         }
-        public async void ListenClient(TcpClient client)
+        public async Task ListenClient(TcpClient client)
         {
-            var stream = client.GetStream();
-            var writer = new StreamWriter(stream);
-            var reader = new StreamReader(stream);
-            User user = null!;
-            var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented };
-            bool work = true;
-            while (work)
+            using ServerWorker worker = new ServerWorker(client, serializer, logger, encryptor);
+            using CancellationTokenSource source = new CancellationTokenSource();
+            ServerUser serverUser = new ServerUser(worker, source);
+            try
             {
-                StringBuilder builder = new StringBuilder();
-                while(stream.DataAvailable)
-                {
-                    builder.AppendLine(await reader.ReadLineAsync());
-                }
-                var message = JsonConvert.DeserializeObject<Message>(builder.ToString());
-                if(message.Header == RequestMethod.CONNECT)
-                {
-                    var LP = message.Body.Split(" ");
-                    var login = LP[0];
-                    var password = LP[1];
-                    var uow = DI.Create<IGenericUnitOfWork>();
-                    user = uow.Repository<User>().FindAllAsync(u => u.Login == login && u.Password == password).Result.Single();
-                    string answer = string.Empty;
-                    if (Users.Any(u => u.Id == user.Id))
-                    {                        
-                        answer = JsonConvert.SerializeObject(new Message() { Header = ResponseCode.ERROR, Body = "The user is already logged in" });
-                    }
-                    else
-                    {
-                        Dispatcher.CurrentDispatcher.Invoke(() => Users.Add(user));
-                        answer = JsonConvert.SerializeObject(new Message() { Header = ResponseCode.OK, Body = $"Hello {user.FirstName}" });
-                    }                    
-                    await writer.WriteAsync(answer);
-                    continue;
-                }
-                if(message.Header == RequestMethod.DISCONNECT)
-                {
-                    Dispatcher.CurrentDispatcher.Invoke(() => Users.Remove(user));
-                    work = false;
-                    break;
-                }
-                if(message.Header == RequestMethod.GET)
-                {
-                    var uow = DI.Create<IGenericUnitOfWork>();
-                    await uow.Repository<User>().LoadAssociatedCollectionAsync(user, u => u.TestAssigneds);
-                    var tests= user.TestAssigneds.Select(ta => ta.Test.GetClearTest()).ToList();
-                    string answer = null!;
-                    if (tests.Count == 0)
-                    {
-                        answer = JsonConvert.SerializeObject(new Message() { Header = ResponseCode.NOT_FOUND, Body = "No active tests" });
-                    }
-                    else
-                    {
-                        var testsJson = JsonConvert.SerializeObject(tests, jsonSettings);
-                        answer = JsonConvert.SerializeObject(new Message() { Header = ResponseCode.OK, Body = testsJson }, jsonSettings);
-                    }                    
-                    await writer.WriteAsync(answer);
-                    continue;
-                }
-                if(message.Header == RequestMethod.POST)
-                {
-                    var test = JsonConvert.DeserializeObject<Test>(message.Body, jsonSettings);
-                    var uow = DI.Create<IGenericUnitOfWork>();
-                    UserTestResult userTestResult = new UserTestResult() { PassageDate = DateTime.Now, UserTaskResults = test.Tasks };
-                    continue;
-                }
-                
+                UserPool.Instance.Add(worker.Id, serverUser);
+                await worker.Work(source.Token);
             }
-            client.Close();
+            catch (OperationCanceledException)
+            {
+                logger.Log($"Client {worker.IP} forcibly disconnected");
+            }
+            catch (Exception ex)
+            {
+                logger.Log(ex.Message);
+            }
+            finally
+            {
+                if(UserPool.Instance.Contains(worker.Id))
+                {
+                    UserPool.Instance.Remove(worker.Id);
+                }
+            }
         }
 
-        #endregion Methods
+        public void Dispose()
+        {
+            if (listener != null)
+            {
+                listener.Stop();
+            }
+            UserPool.Instance.Dispose();
+        }
 
+        void IRecipient<ClientConnectedMessage>.Receive(ClientConnectedMessage message)
+        {
+            App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                Users.Add(message.Client);
+            });
+
+
+        }
+
+        void IRecipient<ClientDisconnectedMessage>.Receive(ClientDisconnectedMessage message)
+        {
+            var user = Users.FirstOrDefault(x => x.WorkerId == message.WorkerId);
+            if(user != null)
+            {
+                App.Current.Dispatcher.BeginInvoke((Action)delegate ()
+                {
+                    Users.Remove(user);
+                });
+            }
+        }
+        #endregion Methods
     }
 }

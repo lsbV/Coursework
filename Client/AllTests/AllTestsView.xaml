@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Client.AllTests.AllTestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.AllTests"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:AllTestsViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Load" Command="{Binding LoadTestsCommand}"/>
+        </StackPanel>
+        <ListView ItemsSource="{Binding Tests}" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Title" Width="AUTO" DisplayMemberBinding="{Binding Test.Title}"/>
+                    <GridViewColumn Header="Time for take" Width="AUTO" DisplayMemberBinding="{Binding TimeToTake}"/>
+                    <GridViewColumn Header="Dedline" Width="AUTO" DisplayMemberBinding="{Binding EndAt}"/>
+                    <GridViewColumn>
+                        <GridViewColumn.Header>
+                            <TextBlock Text="Control"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Start" Command="{Binding DataContext.StartTestCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

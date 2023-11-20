@@ -6,6 +6,7 @@ using TestDesigner.Answer;
 using TestDesigner.Infrastructure;
 using TestLib.Classes.Tasks;
 using TestLib.Abstractions;
+using System.Linq;
 
 namespace TestDesigner.Task.ChooseFromList
 {
@@ -22,7 +23,7 @@ namespace TestDesigner.Task.ChooseFromList
         }
         public override TestLib.Abstractions.Task CreateTask()
         {
-            return new ChooseFromListTask(Description, Point, Answers,  Body);
+            return new ChooseFromListTask(Description, Point, Answers.ToList(),  Body);
         }
     }
 }

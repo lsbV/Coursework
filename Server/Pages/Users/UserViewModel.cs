@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using TestLib.Interfaces;
+using TestLib;
 using Xceed.Wpf.Toolkit;
 
 namespace Server.Pages.Users
@@ -23,6 +23,7 @@ namespace Server.Pages.Users
     {
         #region Fields
         private User user = null!;
+        private IMessenger messenger;
         private readonly ViewMode mode;
         #endregion Fields
 
@@ -44,15 +45,16 @@ namespace Server.Pages.Users
         #endregion Properties
 
         #region Constructors
-        public UserViewModel()
+        public UserViewModel(IMessenger messenger)
         {
-            Name = "User";
+            Name = "New user";
             mode = ViewMode.Create;
             UserGroups = new();
             AllGroups = new();
             Roles = Enum.GetValues<UserRole>().ToList();
+            this.messenger = messenger;
         }
-        public UserViewModel(User user) : this()
+        public UserViewModel(User user, IMessenger messenger) : this(messenger)
         {
             this.user = user;
             mode = ViewMode.Edit;
@@ -98,15 +100,15 @@ namespace Server.Pages.Users
             }
 
 
-            WeakReferenceMessenger.Default.Send(user);
+            messenger.Send(user);
         }
 
         
 
         [RelayCommand]
-        private static void Cancel()
-        {            
-            WeakReferenceMessenger.Default.Send(new User());
+        private void Cancel()
+        {
+            messenger.Send(new User());
         }
         [RelayCommand]
         private void Add(object param)
@@ -133,11 +135,11 @@ namespace Server.Pages.Users
             var groups = new List<Group>(await repoGroup.FindAllAsync(x => listId.Contains(x.Id)));
             return groups;
         }
-        private async Task<IEnumerable<Group>> LoadAllGroupsForUserAsync()
+        private IEnumerable<Group> LoadAllGroupsForUserAsync()
         {
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repoUsers = uow.Repository<User>();
-            await repoUsers.LoadAssociatedCollectionAsync(this.user, u => u.Groups);
+            repoUsers.LoadAssociatedCollection(this.user, u => u.Groups);
             return user.Groups;
         }
         private User CreateUser(User newUser)
@@ -164,8 +166,7 @@ namespace Server.Pages.Users
             CreatedAt = user.CreatedAt;
             if (mode == ViewMode.Edit)
             {
-                //Task.Run(() => UserGroups = new(LoadAllGroupsForUser(user.Id).ToList()));
-                Task.Run(async () => UserGroups = new(await LoadAllGroupsForUserAsync()));
+                Task.Run(() => UserGroups = new( LoadAllGroupsForUserAsync()));
             }
             else
             {

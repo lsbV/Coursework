@@ -14,6 +14,8 @@ namespace Server.Pages.Tests
 {
     public partial class TestViewModel : BaseViewModel
     {
+
+        IMessenger messenger;
         
         #region ObservableProperties
         [ObservableProperty] string title = string.Empty;
@@ -25,21 +27,24 @@ namespace Server.Pages.Tests
         [ObservableProperty] bool isArchived;
         [ObservableProperty] ViewMode viewMode = ViewMode.View;
         [ObservableProperty] Test? test;
-
         #endregion ObservableProperties
 
         #region Constructors
-        public TestViewModel(Test test)
+        public TestViewModel(Test test, IMessenger messenger)
         {
             ViewMode = ViewMode.Edit;
+            this.messenger = messenger;
             InitFields(test);
         }
-        public TestViewModel()
+        public TestViewModel(IMessenger messenger)
         {
             ViewMode = ViewMode.Create;
+            this.messenger = messenger;
         }
 
         #endregion Constructors
+
+
         #region Commands
         [RelayCommand(CanExecute = nameof(CanLoad))]
         private void Load(object param)
@@ -59,6 +64,7 @@ namespace Server.Pages.Tests
                 }
             }
         }
+
         [RelayCommand(CanExecute = nameof(CanSave))]
         private async System.Threading.Tasks.Task Save(object param)
         {
@@ -79,13 +85,36 @@ namespace Server.Pages.Tests
                 await repo.UpdateAsync(test);
             }
         }
+
         [RelayCommand]
         private void Cancel(object param)
         {
-            throw new NotImplementedException();
-            //WeakReferenceMessenger.Default.Send(new AllTestsViewModel() as BaseViewModel);
+            
+        }
+
+        [RelayCommand]
+        private void Download()
+        {
+            ISerializer serializer = DI.Create<ISerializer>();
+            IFileExplorerProvider fileExplorerProvider = DI.Create<IFileExplorerProvider>();
+            var path = fileExplorerProvider.SaveFileDialog();
+            if (path != null)
+            {
+                try
+                {
+                    var serializedTest = serializer.Serialize(Test!);
+                    fileExplorerProvider.SaveFile(Test!, path);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
         #endregion Commands
+
+
+
         #region Methods
         private Test InitTest(Test test)
         {

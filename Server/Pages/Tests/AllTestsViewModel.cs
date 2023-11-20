@@ -19,27 +19,35 @@ namespace Server.Pages.Tests
 {
     public partial class AllTestsViewModel : BaseViewModel, IUpdateable
     {
+        #region Fields
+        private IMessenger messenger;
+        #endregion Fields
+
+
         #region ObservableProperties
         [ObservableProperty] ObservableCollection<Test> tests;
-
         #endregion ObservableProperties
         
+
         #region Constructors
-        public AllTestsViewModel()
+        public AllTestsViewModel(IMessenger messenger)
         {
             Name = "Tests";
+            this.messenger = messenger;
             Tests = new();           
         }
         #endregion Constructors
+
 
         #region Commands
         [RelayCommand]
         private void Edit(object param)
         {
             Test test = (Test)param;
-            var testVM = new TestViewModel(test);
+            var testVM = new TestViewModel(test, messenger);
             WeakReferenceMessenger.Default.Send(testVM as BaseViewModel);
         }
+
         [RelayCommand]
         private async Task RemoveAsync(object param)
         {
@@ -49,18 +57,21 @@ namespace Server.Pages.Tests
             await repo.RemoveAsync(test);
             await UpdateAsynk();
         }
+
         [RelayCommand]
         private void Add(object param)
         {
-            var testVM = new TestViewModel();
+            var testVM = new TestViewModel(messenger);
             WeakReferenceMessenger.Default.Send(testVM as BaseViewModel);
         }
+
         [RelayCommand]
         private async Task RefreshAsync(object param)
         {
             await UpdateAsynk();
         }
         #endregion Commands
+
 
         #region Methods
         public async Task LoadTestsAsync()

@@ -10,14 +10,14 @@ namespace TestLib.Classes.Test
         public string Author { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string InfoForTestTaker { get; set; } = string.Empty;
-        public int CountOfTasks { get => Tasks.Count; }
+        public int? CountOfTasks { get => Tasks?.Count; }
         public double PassingPercent { get; set; }
         public bool IsArchived { get; set; }
         public DateTime CreatedAt { get; set; }
 
 
         public double? TaskPointsSum => Tasks?.Sum(s => s.Point);
-        public ICollection<Task> Tasks { get; set; } = default!;
+        public virtual List<Task> Tasks { get; set; } = default!;
         
         public Test GetClearTest()
         {
@@ -29,8 +29,8 @@ namespace TestLib.Classes.Test
                 Description = Description,
                 InfoForTestTaker = InfoForTestTaker,
                 PassingPercent = PassingPercent,
-                IsArchived = IsArchived,
-                CreatedAt = CreatedAt,
+                IsArchived = false,
+                CreatedAt = DateTime.MinValue,
                 Tasks = Tasks.Select(s => s.GetClearTask()).ToList()
             };
         }

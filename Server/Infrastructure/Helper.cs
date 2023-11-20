@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestLib.Abstractions;
+using TestLib.Classes.Enums;
 
 namespace Server.Infrastructure
 {
@@ -17,6 +19,14 @@ namespace Server.Infrastructure
                 return ProgresStatus.Finished;
             else
                 return ProgresStatus.InProgress;
+        }
+        public static Answer GetNewUserAnswer(this Answer answer)
+        {
+            var newAnswer = (Answer)answer.Clone();
+            newAnswer.Id = 0;
+            answer.Task = null;
+            newAnswer.TaskId = null;
+            return newAnswer;
         }
     }
 }

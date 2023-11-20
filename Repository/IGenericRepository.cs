@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -28,7 +29,12 @@ namespace Repository
         Task UpdateAsync(TEntity entity);
 
         public Task LoadAssociatedCollectionAsync(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression);
+        public void LoadAssociatedCollection(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression);
 
+        public Task LoadAssociatedCollectionAsync(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression, Expression<Func<object, object>> thenInclude);
+        public void LoadAssociatedCollection(TEntity entity, Expression<Func<TEntity, IEnumerable<object>>> expression, Expression<Func<object, object>> thenInclude);
+        
         public Task LoadAssociatedPropertyAsync(TEntity entity, Expression<Func<TEntity, object?>> expression);
+        public void LoadAssociatedProperty(TEntity entity, Expression<Func<TEntity, object?>> expression);
     }
 }

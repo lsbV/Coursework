@@ -10,7 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <WrapPanel>
-            <Button Content="Load test" Command="{Binding LoadCommand}">
+            <Button Content="Upload test" Command="{Binding LoadCommand}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>

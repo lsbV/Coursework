@@ -12,13 +12,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestLib.Interfaces;
+using TestLib;
 
 namespace Server.Pages.Users
 {
     public partial class AllUsersViewModel : BaseViewModel, IUpdateable, IRecipient<User>
     {
         #region Fields
+        IMessenger messenger;
         #endregion Fields
 
         #region ObservableProperties
@@ -30,11 +31,12 @@ namespace Server.Pages.Users
         #endregion Properties
 
         #region Constructors
-        public AllUsersViewModel()
+        public AllUsersViewModel(IMessenger messenger)
         {
             Name = "Users";
             Users = new ObservableCollection<User>();    
-            WeakReferenceMessenger.Default.Register<User>(this);
+            this.messenger = messenger;
+            messenger.RegisterAll(this);
         }
         #endregion Constructors
 
@@ -43,8 +45,8 @@ namespace Server.Pages.Users
         private void Edit(object param)
         {
             User user = (User)param;            
-            var userVM = new UserViewModel(user);
-            WeakReferenceMessenger.Default.Send(userVM as BaseViewModel);
+            var userVM = new UserViewModel(user, messenger);
+            messenger.Send(userVM as BaseViewModel);
         }
         [RelayCommand]
         private async Task RemoveAsync(object param)
@@ -53,13 +55,13 @@ namespace Server.Pages.Users
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repo = uow.Repository<User>();
             await repo.RemoveAsync(user); 
-            await LoadUsersAsynk();
+            await UpdateAsynk();
         }
         [RelayCommand]
         private void Add(object param)
         {
-            var userVM = new UserViewModel();
-            WeakReferenceMessenger.Default.Send(userVM as BaseViewModel);
+            var userVM = new UserViewModel(messenger);
+            messenger.Send(userVM as BaseViewModel);
         }
         [RelayCommand]
         private async Task Refresh(object param)
@@ -69,21 +71,16 @@ namespace Server.Pages.Users
         #endregion Commands
 
         #region Methods
-        public async Task LoadUsersAsynk()
+        public async Task UpdateAsynk()
         {
             using var uow = DI.Create<IGenericUnitOfWork>();
             var repo = uow.Repository<User>();
-            Users = new (await repo.GetAllAsync());
-        }  
-
-        public async Task UpdateAsynk()
-        {
-            await LoadUsersAsynk();
+            Users = new(await repo.GetAllAsync());
         }
 
         public void Receive(User message)
         {
-            WeakReferenceMessenger.Default.Send(this as BaseViewModel);
+            messenger.Send(this as BaseViewModel);
         }
         #endregion Methods
 

@@ -12,7 +12,6 @@ namespace TestDesigner.Infrastructure
         public string? OpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 return openFileDialog.FileName;
@@ -25,7 +24,7 @@ namespace TestDesigner.Infrastructure
 
         private static bool RewriteFile(string path, string json)
         {
-            if (File.Exists(path) && Path.GetExtension(path) == ".json")
+            if (File.Exists(path))
             {
                 try
                 {
@@ -43,7 +42,6 @@ namespace TestDesigner.Infrastructure
         private static bool CreateNewFile(string json)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == true)
             {
                 try
@@ -101,6 +99,19 @@ namespace TestDesigner.Infrastructure
             else
             {
                 return RewriteFile(path, json);
+            }
+        }
+
+        public string? SaveFileDialog()
+        {
+            SaveFileDialog saveFileDialog = new();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                return saveFileDialog.FileName;
+            }
+            else
+            {
+                return null;
             }
         }
     }

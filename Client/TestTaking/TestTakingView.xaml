@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="Client.TestTaking.TestTakingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.TestTaking"
+             xmlns:task="clr-namespace:Client.MVVM_Task._Task"
+             xmlns:body="clr-namespace:Client.MVVM_Task._Body"
+             d:DataContext="{d:DesignInstance Type=local:TestTakingViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type task:ChooseFromListVM}">
+            <task:ChooseFromListV/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type body:ImageBodyVM}">
+            <body:ImageBodyV/>
+        </DataTemplate>
+        <!--<DataTemplate DataType="{x:Type task:EnterTextVM}">
+            <task:EnterTextV/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type task:MatchPairsVM}">
+            <task:MatchPairsV/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type task:MultipleChoiceVM}">
+            <task:MultipleChoiceV/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type task:TrueFalseVM}">
+            <task:TrueFalseV/>
+        </DataTemplate>-->
+        
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Content="End test" Command="{Binding EndTestCommand}"/>
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="1">
+            <ListBox>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </ScrollViewer>
+        <ListBox ItemsSource="{Binding Tasks}" Grid.Row="2">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <UserControl Content="{Binding }"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

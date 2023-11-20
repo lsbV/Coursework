@@ -10,6 +10,7 @@ namespace TestLib.Classes.Network
     {
         public const string OK = "OK";
         public const string ERROR = "ERROR";
+        public const string SERVER_ERROR = "SERVER_ERROR";
         public const string NOT_FOUND = "NOT_FOUND";
         public const string BAD_REQUEST = "BAD_REQUEST";
 

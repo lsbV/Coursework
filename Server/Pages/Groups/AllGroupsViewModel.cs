@@ -12,12 +12,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TestLib.Interfaces;
+using TestLib;
 
 namespace Server.Pages.Groups
 {
     public partial class AllGroupsViewModel : BaseViewModel, IUpdateable, IRecipient<Group>
     {
+        private IMessenger messenger;
+
         #region ObservableProperties
         [ObservableProperty] ObservableCollection<Group> groups = null!;
         #endregion ObservableProperties
@@ -26,26 +28,31 @@ namespace Server.Pages.Groups
         #endregion Properties
 
         #region Constructors
-        public AllGroupsViewModel()
+        public AllGroupsViewModel(IMessenger messenger)
         {
             Name = "Groups";
-            WeakReferenceMessenger.Default.Register<Group>(this);
+            this.messenger = messenger;
+            messenger.RegisterAll(this);
         }
         #endregion Constructors
+
+
         #region Commands
         [RelayCommand]
-        private static void Edit(object param)
+        private void Edit(object param)
         {
             Group group = (Group)param;
-            var groupVM = new GroupViewModel(group);
-            WeakReferenceMessenger.Default.Send(groupVM as BaseViewModel);
+            var groupVM = new GroupViewModel(group, messenger);
+            messenger.Send(groupVM as BaseViewModel);
         }
+
         [RelayCommand]
-        private static void Add(object param)
+        private void Add(object param)
         {
-            var groupVM = new GroupViewModel();
-            WeakReferenceMessenger.Default.Send(groupVM as BaseViewModel);
+            var groupVM = new GroupViewModel(messenger);
+            messenger.Send(groupVM as BaseViewModel);
         }
+
         [RelayCommand]
         private async Task RemoveAsync(object param)
         {
@@ -55,17 +62,21 @@ namespace Server.Pages.Groups
             await repo.RemoveAsync(group);
             await LoadGroupsAsync();
         }
+
         [RelayCommand]
-        private static void Cancel()
-        {   
-            WeakReferenceMessenger.Default.Send(new Group());
+        private void Cancel()
+        {
+            messenger.Send(new Group());
         }
+
         [RelayCommand]
         private async Task RefreshAsync()
         {
             await UpdateAsynk();
         }
         #endregion Commands
+
+
         #region Methods
         public async Task LoadGroupsAsync()
         {
@@ -81,7 +92,7 @@ namespace Server.Pages.Groups
 
         public void Receive(Group message)
         {
-            WeakReferenceMessenger.Default.Send(this as BaseViewModel);
+            messenger.Send(this as BaseViewModel);
         }
         #endregion Methods
     }

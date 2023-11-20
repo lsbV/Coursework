@@ -12,21 +12,25 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestLib;
 
 namespace Server.Pages.TestsAssigned
 {
     public partial class AllTestAssignedViewModel : BaseViewModel, IUpdateable, IRecipient<TestAssigned>
     {
+        private readonly IMessenger messenger;
+
         #region ObservableProperties
         [ObservableProperty] ObservableCollection<TestAssigned> testsAssigned;
         #endregion ObservableProperties
 
         #region Constructors
-        public AllTestAssignedViewModel()
+        public AllTestAssignedViewModel(IMessenger messenger)
         {
             Name = "Tests assigned";
             TestsAssigned = new();
-            WeakReferenceMessenger.Default.Register<TestAssigned>(this);
+            this.messenger = messenger;
+            messenger.RegisterAll(this);
         }
         #endregion Constructors
 
@@ -35,8 +39,8 @@ namespace Server.Pages.TestsAssigned
         private void Edit(object param)
         {
             var testAssigned = (TestAssigned)param;
-            var testAssignedVM = new TestAssignedViewModel(testAssigned);
-            WeakReferenceMessenger.Default.Send(testAssignedVM as BaseViewModel);
+            var testAssignedVM = new TestAssignedViewModel(testAssigned, messenger);
+            messenger.Send(testAssignedVM as BaseViewModel);
         }
         [RelayCommand]
         private async Task RemoveAsync(object param)
@@ -50,8 +54,8 @@ namespace Server.Pages.TestsAssigned
         [RelayCommand]
         private void Add(object param)
         {
-            var testAssignedVM = new TestAssignedViewModel();
-            WeakReferenceMessenger.Default.Send(testAssignedVM as BaseViewModel);
+            var testAssignedVM = new TestAssignedViewModel(messenger);
+            messenger.Send(testAssignedVM as BaseViewModel);
         }
         [RelayCommand]
         private async Task RefreshAsync(object param)
@@ -75,7 +79,7 @@ namespace Server.Pages.TestsAssigned
 
         public void Receive(TestAssigned message)
         {
-            WeakReferenceMessenger.Default.Send(this as BaseViewModel);
+            messenger.Send(this as BaseViewModel);
         }
         #endregion Methods
     }

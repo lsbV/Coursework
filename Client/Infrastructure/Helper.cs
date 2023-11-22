@@ -31,6 +31,10 @@ namespace Client.Infrastructure
             {
                 case TextAnswer:
                     return new TextAnswerVM(answer);
+                case ImageAnswer:
+                    return new ImageAnswerVM(answer);
+                case MatchAnswer:
+                    return new MatchAnswerVM(answer);
                 default:
                     throw new Exception("Unknown answer type");
             }
@@ -41,6 +45,8 @@ namespace Client.Infrastructure
             {
                 case ChooseFromListTask:
                     return new ChooseFromListVM(task);
+                case MatchTask:
+                    return new MatchTaskVM(task);
                 default:
                     throw new Exception("Unknown task type");
             }
@@ -54,9 +60,16 @@ namespace Client.Infrastructure
 
         public static ImageSource? ToImageSource(this byte[] imageBytes)
         {
-            var imageSourceConverter = new ImageSourceConverter();
-            MemoryStream ms = new MemoryStream(imageBytes);
-            return (ImageSource)imageSourceConverter.ConvertFrom(ms)!;
+            try
+            {
+                var imageSourceConverter = new ImageSourceConverter();
+                MemoryStream ms = new MemoryStream(imageBytes);
+                return (ImageSource)imageSourceConverter.ConvertFrom(ms)!;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

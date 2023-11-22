@@ -1,4 +1,6 @@
-﻿using TestLib.Abstractions;
+﻿// Ignore Spelling: Scp
+
+using TestLib.Abstractions;
 using WinSCP;
 
 namespace TestLib.Classes.Network
@@ -70,10 +72,11 @@ namespace TestLib.Classes.Network
 
                 return fileContent;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return null;
             }
+
         }
     }
 }

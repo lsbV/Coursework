@@ -6,6 +6,7 @@ using TestLib;
 using TestLib.Abstractions;
 using TestLib.Classes.Answers;
 using TestLib.Classes.Bodies;
+using TestLib.Classes.Enums;
 using TestLib.Classes.Network;
 using TestLib.Classes.Tasks;
 using TestLib.Classes.Test;
@@ -19,6 +20,7 @@ namespace DALTestsDB
 
         public DbSet<Task> Task { get; set; }
         public DbSet<ChooseFromListTask> ChooseFromListTask { get; set; }
+        public DbSet<MatchTask> MatchTask { get; set; }
 
         public DbSet<Body> Body { get; set; }
         public DbSet<TextBody> TextBody { get; set; }
@@ -26,6 +28,8 @@ namespace DALTestsDB
 
         public DbSet<Answer> Answer { get; set; }
         public DbSet<TextAnswer> TextAnswer { get; set; }
+        public DbSet<ImageAnswer> ImageAnswer { get; set; }
+        public DbSet<MatchAnswer> MatchAnswer { get; set; }
 
         public DbSet<User> User { get; set; }
         public DbSet<Group> Group { get; set; }
@@ -40,10 +44,8 @@ namespace DALTestsDB
 
         public TestDBContext()
         {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
-        }
 
+        }
         public TestDBContext(DbContextOptions options) : base(options)
         {
             //Database.EnsureDeleted();
@@ -63,6 +65,7 @@ namespace DALTestsDB
             modelBuilder.ApplyConfiguration<Task>(new TaskConfiguration());
             modelBuilder.ApplyConfiguration<Body>(new BodyConfiguration());
             modelBuilder.ApplyConfiguration<Answer>(new AnswerConfiguration());
+            modelBuilder.ApplyConfiguration<MatchAnswer>(new MatchAnswerConfiguration());
 
 
 
@@ -71,9 +74,9 @@ namespace DALTestsDB
             var users = new User[]
             {
                 new User(){Id = 1, FirstName = "Admin", LastName = "Admin", Login = "admin", Password = encryptor.Encrypt("admin"), Role = UserRole.Admin, CreatedAt = new (2000,02,15), IsArchived = false },
-                new User(){Id = 2, FirstName = "User", LastName = "User", Login = "user", Password = encryptor.Encrypt("user"), Role = UserRole.User, CreatedAt = new (2000,01,12), IsArchived = false },
-                new User(){Id = 3, FirstName = "User1", LastName = "User1", Login = "user1", Password = encryptor.Encrypt("user1"), Role = UserRole.User, CreatedAt = new (2000,03,11), IsArchived = true},
-                new User(){Id = 4, FirstName = "User2", LastName = "User2", Login = "user2", Password = encryptor.Encrypt("user2"), Role = UserRole.User, CreatedAt = new (2000,05,21), IsArchived = false}
+                new User(){Id = 2, FirstName = "User", LastName = "User", Login = "user", Password = encryptor.Encrypt("user"), Role = UserRole.User, CreatedAt = new (2001,01,12), IsArchived = false },
+                new User(){Id = 3, FirstName = "User1", LastName = "User1", Login = "user1", Password = encryptor.Encrypt("user1"), Role = UserRole.User, CreatedAt = new (2002,03,11), IsArchived = true},
+                new User(){Id = 4, FirstName = "User2", LastName = "User2", Login = "user2", Password = encryptor.Encrypt("user2"), Role = UserRole.User, CreatedAt = new (2005,05,21), IsArchived = false}
             };
             var groups = new Group[]
             {
@@ -87,7 +90,7 @@ namespace DALTestsDB
                 new UserGroup(){UserId = 3, GroupId = 2},
                 new UserGroup(){UserId = 4, GroupId = 2,}
             };
-            var ansvers = new TextAnswer[]
+            var textAnswer = new TextAnswer[]
             {
                 new TextAnswer(){Id = 1, Text = "1", IsCorrect = false, TaskId = 1,},
                 new TextAnswer(){Id = 2, Text = "2", IsCorrect = false, TaskId = 1},
@@ -99,6 +102,16 @@ namespace DALTestsDB
                 new TextAnswer(){Id = 7, Text = "3", IsCorrect = false, TaskId = 2},
                 new TextAnswer(){Id = 8, Text = "4", IsCorrect = true, TaskId = 2,},
             };
+            var matchAnswers = new MatchAnswer[]
+            {
+                new MatchAnswer() { Id = 9, Text = "Image", IsCorrect = true, TaskId = 3, Side = MatchSide.Left, PartnerId = 10 },
+                new MatchAnswer() { Id = 10, Text = "Picture", IsCorrect = true, TaskId = 3, Side = MatchSide.Right, PartnerId = 9, },
+                new MatchAnswer(){Id = 11, Text = "Apartment", IsCorrect = true, TaskId = 3, Side = MatchSide.Left, PartnerId = 12},
+                new MatchAnswer(){Id = 12, Text = "Flat", IsCorrect = true, TaskId = 3, Side = MatchSide.Right, PartnerId = 11},
+                //new MatchAnswer(){Id = 13, Text = "Pants", IsCorrect = true, TaskId = 3, Side = MatchSide.Left, PartnerId = 14},
+                //new MatchAnswer(){Id = 14, Text = "Trousers", IsCorrect = true, TaskId = 3, Side = MatchSide.Right, PartnerId = 13},
+
+            };
             var imageBodies = new ImageBody[]
             {
                 new ImageBody(){Id = 2, ImagePath = "/Messenger-icon.png", ImageLength = 3993, TaskId = 2,},
@@ -106,11 +119,16 @@ namespace DALTestsDB
             var bodies = new TextBody[]
             {
                 new TextBody(){Id = 1, Text = "2+2 =", TaskId = 1,},
+                new TextBody(){Id = 3, Text = "Match similar", TaskId = 3,},
             };
             var tasks = new ChooseFromListTask[]
             {
                 new ChooseFromListTask(){Id = 1, TestId = 1, Description = "ChooseFromListTask", Point = 10, BodyId = 1,},
                 new ChooseFromListTask(){Id = 2, TestId = 1, Description = "ChooseFromListTask", Point = 10, BodyId = 2,},
+            };
+            var matchTasks = new MatchTask[]
+            {
+                new MatchTask(){Id = 3, TestId = 1, Description = "MatchTask", Point = 10, BodyId = 3,},
             };
             var tests = new Test[]
             {
@@ -134,9 +152,11 @@ namespace DALTestsDB
             modelBuilder.Entity<UserGroup>().HasData(userGroups);
             modelBuilder.Entity<Test>().HasData(tests);
             modelBuilder.Entity<ChooseFromListTask>().HasData(tasks);
+            modelBuilder.Entity<MatchTask>().HasData(matchTasks);
+            modelBuilder.Entity<MatchAnswer>().HasData(matchAnswers);
             modelBuilder.Entity<TextBody>().HasData(bodies);
             modelBuilder.Entity<ImageBody>().HasData(imageBodies);
-            modelBuilder.Entity<TextAnswer>().HasData(ansvers);
+            modelBuilder.Entity<TextAnswer>().HasData(textAnswer);
             modelBuilder.Entity<TestAssigned>().HasData(asignedTests);
             modelBuilder.Entity<TestAssignedUser>().HasData(asignedUsers);
 
@@ -174,33 +194,33 @@ namespace DALTestsDB
             //modelBuilder.Entity<UserAnswerResult>().HasData(userAnswerResult);
 
 
-          
-
-           
-
-           
-
-            
-
-                
-
-            
-
-            
-
-           
-
-            
-
-           
 
 
 
-            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TestDB;Trusted_Connection=True;");
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TestDB;Trusted_Connection=True;");
+        }
     }
 }

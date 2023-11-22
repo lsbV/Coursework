@@ -102,7 +102,7 @@ namespace Server.Pages.Listener
                 var testAssinedRepo = uow.Repository<TestAssigned>();
 
                 var tau = uow.Repository<TestAssignedUser>().FindAll(ta => ta.TestAssignedId == testId && ta.UserId == userId && ta.IsActive == true).ToList();
-                if(tau.Count == 0)
+                if (tau.Count == 0)
                 {
                     return CreateMessage(ResponseCode.NOT_FOUND, "Test not found");
                 }
@@ -377,7 +377,7 @@ namespace Server.Pages.Listener
             StringBuilder sb = new StringBuilder();
 
             var messageLength = new byte[maxMessageLength];
-            await stream.ReadAsync(messageLength, 0, messageLength.Length, token);
+            await stream.ReadAsync(messageLength, token);
             var lengthStr = Encoding.UTF8.GetString(messageLength);
             if (int.TryParse(lengthStr, out int bufferSize) == false)
             {

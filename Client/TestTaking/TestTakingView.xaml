@@ -16,6 +16,12 @@
         <DataTemplate DataType="{x:Type body:ImageBodyVM}">
             <body:ImageBodyV/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type body:TextBodyVM}">
+            <body:TextBodyV/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type task:MatchTaskVM}">
+            <task:MatchTaskV/>
+        </DataTemplate>
         <!--<DataTemplate DataType="{x:Type task:EnterTextVM}">
             <task:EnterTextV/>
         </DataTemplate>
@@ -28,7 +34,7 @@
         <DataTemplate DataType="{x:Type task:TrueFalseVM}">
             <task:TrueFalseV/>
         </DataTemplate>-->
-        
+
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>

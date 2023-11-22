@@ -198,6 +198,23 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MatchTask",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchTask", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MatchTask_Task_Id",
+                        column: x => x.Id,
+                        principalTable: "Task",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TestAssignedUser",
                 columns: table => new
                 {
@@ -226,6 +243,49 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ImageAnswer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageLength = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageAnswer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImageAnswer_Answer_Id",
+                        column: x => x.Id,
+                        principalTable: "Answer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MatchAnswer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Side = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MatchAnswer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MatchAnswer_Answer_Id",
+                        column: x => x.Id,
+                        principalTable: "Answer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MatchAnswer_MatchAnswer_PartnerId",
+                        column: x => x.PartnerId,
+                        principalTable: "MatchAnswer",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TextAnswer",
                 columns: table => new
                 {
@@ -238,6 +298,25 @@ namespace DALTestsDB.Migrations
                         name: "FK_TextAnswer_Answer_Id",
                         column: x => x.Id,
                         principalTable: "Answer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ImageBody",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageLength = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageBody", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImageBody_Body_Id",
+                        column: x => x.Id,
+                        principalTable: "Body",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -349,15 +428,20 @@ namespace DALTestsDB.Migrations
                 values: new object[,]
                 {
                     { 1, new DateTime(2000, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Admin", false, "Admin", "admin", "�iv�A���M�߱g��s�K��o*�H�", 0 },
-                    { 2, new DateTime(2000, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User", false, "User", "user", "��m�c��i��� ui��5Hmڲ��[���", 1 },
-                    { 3, new DateTime(2000, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User1", true, "User1", "user1", "\n�bʤ��5g���� x}��C=���xʿΐ", 1 },
-                    { 4, new DateTime(2000, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User2", false, "User2", "user2", "`%я䊽E�(��eݘ�!�J��a�Ap9�", 1 }
+                    { 2, new DateTime(2001, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User", false, "User", "user", "��m�c��i��� ui��5Hmڲ��[���", 1 },
+                    { 3, new DateTime(2002, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User1", true, "User1", "user1", "\n�bʤ��5g���� x}��C=���xʿΐ", 1 },
+                    { 4, new DateTime(2005, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "User2", false, "User2", "user2", "`%я䊽E�(��eݘ�!�J��a�Ap9�", 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Task",
                 columns: new[] { "Id", "BodyId", "Description", "Point", "TestId" },
-                values: new object[] { 1, 1, "ChooseFromListTask", 10.0, 1 });
+                values: new object[,]
+                {
+                    { 1, 1, "ChooseFromListTask", 10.0, 1 },
+                    { 2, 2, "ChooseFromListTask", 10.0, 1 },
+                    { 3, 3, "MatchTask", 10.0, 1 }
+                });
 
             migrationBuilder.InsertData(
                 table: "TestAssigned",
@@ -383,18 +467,38 @@ namespace DALTestsDB.Migrations
                     { 1, false, 1, "1" },
                     { 2, false, 1, "2" },
                     { 3, false, 1, "3" },
-                    { 4, true, 1, "4" }
+                    { 4, true, 1, "4" },
+                    { 5, false, 2, "1" },
+                    { 6, false, 2, "2" },
+                    { 7, false, 2, "3" },
+                    { 8, true, 2, "4" },
+                    { 9, true, 3, "Image" },
+                    { 10, true, 3, "Picture" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Body",
                 columns: new[] { "Id", "TaskId", "Text" },
-                values: new object[] { 1, 1, "2+2 =" });
+                values: new object[,]
+                {
+                    { 1, 1, "2+2 =" },
+                    { 2, 2, "" },
+                    { 3, 3, "Match similar" }
+                });
 
             migrationBuilder.InsertData(
                 table: "ChooseFromListTask",
                 column: "Id",
-                value: 1);
+                values: new object[]
+                {
+                    1,
+                    2
+                });
+
+            migrationBuilder.InsertData(
+                table: "MatchTask",
+                column: "Id",
+                value: 3);
 
             migrationBuilder.InsertData(
                 table: "TestAssignedUser",
@@ -408,6 +512,16 @@ namespace DALTestsDB.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ImageBody",
+                columns: new[] { "Id", "ImageLength", "ImagePath" },
+                values: new object[] { 2, 3993, "/Messenger-icon.png" });
+
+            migrationBuilder.InsertData(
+                table: "MatchAnswer",
+                columns: new[] { "Id", "PartnerId", "Side" },
+                values: new object[] { 10, null, 1 });
+
+            migrationBuilder.InsertData(
                 table: "TextAnswer",
                 column: "Id",
                 values: new object[]
@@ -415,13 +529,26 @@ namespace DALTestsDB.Migrations
                     1,
                     2,
                     3,
-                    4
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
                 });
 
             migrationBuilder.InsertData(
                 table: "TextBody",
                 column: "Id",
-                value: 1);
+                values: new object[]
+                {
+                    1,
+                    3
+                });
+
+            migrationBuilder.InsertData(
+                table: "MatchAnswer",
+                columns: new[] { "Id", "PartnerId", "Side" },
+                values: new object[] { 9, 10, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Answer_TaskId",
@@ -433,6 +560,11 @@ namespace DALTestsDB.Migrations
                 table: "Body",
                 column: "TaskId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MatchAnswer_PartnerId",
+                table: "MatchAnswer",
+                column: "PartnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Task_TestId",
@@ -491,6 +623,18 @@ namespace DALTestsDB.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ChooseFromListTask");
+
+            migrationBuilder.DropTable(
+                name: "ImageAnswer");
+
+            migrationBuilder.DropTable(
+                name: "ImageBody");
+
+            migrationBuilder.DropTable(
+                name: "MatchAnswer");
+
+            migrationBuilder.DropTable(
+                name: "MatchTask");
 
             migrationBuilder.DropTable(
                 name: "TextAnswer");

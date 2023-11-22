@@ -13,7 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DALTestsDB", "DALTestsDB\DALTestsDB.csproj", "{56E0FC32-AADF-4B9A-9F08-63689EF65608}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerTests", "ServerTests\ServerTests.csproj", "{038A64C4-7571-456D-8B53-D200E8207EA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7E820ABE-8FDA-4014-9EEF-B888A5E26992}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +52,10 @@ Global
 		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC10F356-303D-4BFB-B4C7-CDFCC77AB585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038A64C4-7571-456D-8B53-D200E8207EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038A64C4-7571-456D-8B53-D200E8207EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038A64C4-7571-456D-8B53-D200E8207EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038A64C4-7571-456D-8B53-D200E8207EA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

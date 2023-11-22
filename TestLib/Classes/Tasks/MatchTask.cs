@@ -2,44 +2,40 @@
 using TestLib.Abstractions;
 using TestLib.Classes.Answers;
 using Task = TestLib.Abstractions.Task;
+using System.Linq;
 
 namespace TestLib.Classes.Tasks
 {
     public class MatchTask : Task
     {
-      
+
         public override Task GetClearTask()
         {
             return ClearTaskClone<MatchTask>();
         }
 
-        public override double GetGrade(List<Answer> answers)
+        public override double GetGrade(List<Answer> userAnswers)
         {
-            if(answers.Count > Answers.Count)
+            if (userAnswers.Count > Answers.Count)
             {
-                throw new ArgumentException($"Incorect answers count |TaskID:{Id}|");
+                throw new ArgumentException($"Incorrect answers count |TaskID:{Id}|");
             }
-            IEnumerable<MatchAnswer> userAnsvers = answers.Select(a=>(MatchAnswer)a);
+            IEnumerable<MatchAnswer> userAnsvers = userAnswers.Select(a => (MatchAnswer)a);
             IEnumerable<MatchAnswer> trueAnswers = Answers.Select(a => (MatchAnswer)a);
-            if (answers == null)
-            {
-                throw new ArgumentNullException(nameof(answers));
-            }
+
             double grade = 0;
             double interim = Point / Answers.Count;
             var leftTruePart = trueAnswers.Where(a => a.Side == Enums.MatchSide.Left);
             var leftUserPart = userAnsvers.Where(a => a.Side == Enums.MatchSide.Left);
-            foreach (var userAnswer in leftUserPart)
+            foreach (var userAnswer in leftUserPart.Where(userAnswer => leftTruePart.Contains(userAnswer)))
             {
-                if(leftTruePart.Contains(userAnswer))
+                var trueAnswer = leftTruePart.Single(a => a == userAnswer);
+                if (trueAnswer.Text == userAnswer.Text && trueAnswer.Partner!.Text == userAnswer.Partner!.Text)
                 {
-                    var trueAnswer = leftTruePart.Single(a=>a == userAnswer);
-                    if (trueAnswer.Text == userAnswer.Text && trueAnswer.Partner!.Text == userAnswer.Partner!.Text)
-                    {
-                        grade += interim;
-                    }
+                    grade += interim;
                 }
             }
+
             return grade;
         }
     }

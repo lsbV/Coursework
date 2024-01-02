@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DALTestsDB.Migrations
 {
     [DbContext(typeof(TestDBContext))]
-    [Migration("20231121161738_M2")]
+    [Migration("20231201140124_M2")]
     partial class M2
     {
         /// <inheritdoc />
@@ -528,29 +528,11 @@ namespace DALTestsDB.Migrations
                     b.Property<int>("Side")
                         .HasColumnType("int");
 
-                    b.HasIndex("PartnerId");
+                    b.HasIndex("PartnerId")
+                        .IsUnique()
+                        .HasFilter("[PartnerId] IS NOT NULL");
 
                     b.ToTable("MatchAnswer");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 9,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Image",
-                            PartnerId = 10,
-                            Side = 0
-                        },
-                        new
-                        {
-                            Id = 10,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Picture",
-                            PartnerId = 9,
-                            Side = 1
-                        });
                 });
 
             modelBuilder.Entity("TestLib.Classes.Answers.TextAnswer", b =>
@@ -853,9 +835,8 @@ namespace DALTestsDB.Migrations
                         .IsRequired();
 
                     b.HasOne("TestLib.Classes.Answers.MatchAnswer", "Partner")
-                        .WithMany()
-                        .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Answers.MatchAnswer", "PartnerId");
 
                     b.Navigation("Partner");
                 });

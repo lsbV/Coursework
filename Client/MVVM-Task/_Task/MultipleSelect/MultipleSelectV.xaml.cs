@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Client.MVVM_Task._Task
 {
     /// <summary>
-    /// Interaction logic for ChooseFromListV.xaml
+    /// Interaction logic for MultipleSelectV.xaml
     /// </summary>
-    public partial class ChooseFromListV : UserControl
+    public partial class MultipleSelectV : UserControl
     {
-        public ChooseFromListV()
+        public MultipleSelectV()
         {
             InitializeComponent();
         }

@@ -2,7 +2,6 @@
 using TestLib.Abstractions;
 using TestLib.Classes.Answers;
 using Task = TestLib.Abstractions.Task;
-using System.Linq;
 
 namespace TestLib.Classes.Tasks
 {
@@ -16,27 +15,32 @@ namespace TestLib.Classes.Tasks
 
         public override double GetGrade(List<Answer> userAnswers)
         {
+            if (userAnswers == null)
+            {
+                throw new ArgumentNullException(nameof(userAnswers));
+            }
             if (userAnswers.Count > Answers.Count)
             {
                 throw new ArgumentException($"Incorrect answers count |TaskID:{Id}|");
             }
-            IEnumerable<MatchAnswer> userAnsvers = userAnswers.Select(a => (MatchAnswer)a);
-            IEnumerable<MatchAnswer> trueAnswers = Answers.Select(a => (MatchAnswer)a);
 
             double grade = 0;
-            double interim = Point / Answers.Count;
-            var leftTruePart = trueAnswers.Where(a => a.Side == Enums.MatchSide.Left);
-            var leftUserPart = userAnsvers.Where(a => a.Side == Enums.MatchSide.Left);
-            foreach (var userAnswer in leftUserPart.Where(userAnswer => leftTruePart.Contains(userAnswer)))
+            double interim = Math.Round(Point / (Answers.Count / 2), 3); // because each answer has 2 parts
+            var leftTruePart = Answers.Cast<MatchAnswer>().Where(a => a.Side == Enums.MatchSide.Left).ToList();
+            var leftUserPart = userAnswers.Cast<MatchAnswer>().Where(a => a.Side == Enums.MatchSide.Left).ToList();
+
+            foreach (var userAnswer in leftUserPart)
             {
-                var trueAnswer = leftTruePart.Single(a => a == userAnswer);
-                if (trueAnswer.Text == userAnswer.Text && trueAnswer.Partner!.Text == userAnswer.Partner!.Text)
+                foreach (var trueAnswer in leftTruePart)
                 {
-                    grade += interim;
+                    if (userAnswer == trueAnswer)
+                    {
+                        grade += interim;
+                    }
                 }
             }
 
-            return grade;
+            return Math.Round(grade, 2);
         }
     }
 }

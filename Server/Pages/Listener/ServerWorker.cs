@@ -55,7 +55,7 @@ namespace Server.Pages.Listener
         {
             while (working)
             {
-                var msg = await ReciveMessage(token);
+                var msg = await ReceiveMessage(token);
                 if (msg == null)
                 {
                     continue;
@@ -201,9 +201,8 @@ namespace Server.Pages.Listener
                 taskResultRepo.LoadAssociatedCollection(userTaskResult, t => t.UserAnswerResults);
                 foreach (var item in task.Answers)
                 {
-                    UserAnswerResult userTaskAnswer = new UserAnswerResult() { UserTaskResultId = userTaskResult.Id, Answer = item.GetNewUserAnswer() };
+                    UserAnswerResult userTaskAnswer = new UserAnswerResult() { UserTaskResultId = userTaskResult.Id, Answer = item.ClearDbData() };
                     answerResultRepo.Add(userTaskAnswer);
-
                 }
             }
             testReslutRepo.Update(userTestResult);
@@ -361,36 +360,38 @@ namespace Server.Pages.Listener
             errorText = string.Empty;
             return true;
         }
-        private void SendMessage(Message message)
+        public void SendMessage(Message message)
         {
             var serializedMessage = serializer.Serialize(message);
-            writer.Write(serializedMessage.Length.ToString());
-            writer.Flush();
-            writer.Write(serializedMessage);
-            writer.Flush();
+            stream.Write(Encoding.UTF8.GetBytes(serializedMessage.Length.ToString()));
+            //writer.Write(serializedMessage.Length.ToString());
+            //writer.Flush();
+            stream.Write(Encoding.UTF8.GetBytes(serializedMessage));
+            //writer.Write(serializedMessage);
+            //writer.Flush();
         }
 
 
-        public async Task<Message?> ReciveMessage(CancellationToken token)
+        public async Task<Message?> ReceiveMessage(CancellationToken token)
         {
             const byte maxMessageLength = 16;
-            StringBuilder sb = new StringBuilder();
-
             var messageLength = new byte[maxMessageLength];
+
             await stream.ReadAsync(messageLength, token);
             var lengthStr = Encoding.UTF8.GetString(messageLength);
             if (int.TryParse(lengthStr, out int bufferSize) == false)
-            {
                 return null;
-            }
-            var buffer = new byte[bufferSize];
-            await stream.ReadAsync(buffer, 0, buffer.Length, token);
-            sb.Append(Encoding.UTF8.GetString(buffer));
 
-            if (sb.Length == 0)
+            var buffer = new byte[bufferSize];
+            await stream.ReadAsync(buffer, token);
+            var message = Encoding.UTF8.GetString(buffer);
+
+            if (message.Length == 0)
                 return null;
-            return serializer.Deserialize<Message>(sb.ToString());
+            return serializer.Deserialize<Message>(message);
         }
+
+
         public void Dispose()
         {
             client.Close();

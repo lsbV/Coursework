@@ -22,6 +22,12 @@
         <DataTemplate DataType="{x:Type task:MatchTaskVM}">
             <task:MatchTaskV/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type task:MultipleSelectVM}">
+            <task:MultipleSelectV/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type task:EnterTextTaskVM}">
+            <task:EnterTextTaskV/>
+        </DataTemplate>
         <!--<DataTemplate DataType="{x:Type task:EnterTextVM}">
             <task:EnterTextV/>
         </DataTemplate>
@@ -55,12 +61,15 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </ScrollViewer>
-        <ListBox ItemsSource="{Binding Tasks}" Grid.Row="2">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <UserControl Content="{Binding }"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <ScrollViewer Grid.Row="2">
+            <ListBox ItemsSource="{Binding Tasks}" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <UserControl Content="{Binding }"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        
     </Grid>
 </UserControl>

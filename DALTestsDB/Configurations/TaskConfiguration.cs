@@ -17,6 +17,8 @@ namespace DALTestsDB.Configurations
         public void Configure(EntityTypeBuilder<Task> builder)
         {
             builder.UseTptMappingStrategy();
+            builder.Ignore(t => t.Description);
+
             builder
                .HasMany(task => task.Answers)
                .WithOne(answer => answer.Task)

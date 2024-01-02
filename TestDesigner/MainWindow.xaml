@@ -27,7 +27,7 @@
             <Button Content="Add task" Command="{Binding CreateEditTaskCommand}" Width="100"/>
             <Button Content="Save test" Command="{Binding SaveTestCommand}" Width="100"/>
             <Button Content="Load test" Command="{Binding LoadTestCommand}" Width="100"/>
-            
+
         </StackPanel>
 
         <StackPanel Grid.Column="0" Grid.Row="2">
@@ -60,7 +60,7 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Info for tast taker" Grid.Column="0" />
+                <Label Content="Info for test taker" Grid.Column="0" />
                 <xceed:WatermarkTextBox Text="{Binding InfoForTestTaker}" Watermark="Enter your name" Grid.Column="1" TextWrapping="Wrap" Height="100"/>
             </Grid>
             <Grid>
@@ -92,7 +92,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="AUTO"/>
                 <RowDefinition/>
-                <RowDefinition/>                
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.Resources>
                 <Style TargetType="DataGrid">
@@ -105,8 +105,8 @@
                 <Style TargetType="Button" >
                     <Setter Property="Margin" Value="5"/>
                 </Style>
-            </Grid.Resources>           
-            
+            </Grid.Resources>
+
             <DataGrid ItemsSource="{Binding Tasks}" Grid.Row="1" SelectedItem="{Binding SelectedTask}">
                 <DataGrid.Columns>
                     <DataGridTextColumn  Header="Description" Width="*" Binding="{Binding Body.Text}"/>
@@ -122,6 +122,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        
+
     </Grid>
 </UserControl>

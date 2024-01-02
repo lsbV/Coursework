@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DALTestsDB.Migrations
 {
     [DbContext(typeof(TestDBContext))]
-    [Migration("20231121162150_M4")]
-    partial class M4
+    [Migration("20231201132220_M1")]
+    partial class M1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -523,6 +523,7 @@ namespace DALTestsDB.Migrations
                     b.HasBaseType("TestLib.Abstractions.Answer");
 
                     b.Property<int?>("PartnerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Side")
@@ -531,44 +532,6 @@ namespace DALTestsDB.Migrations
                     b.HasIndex("PartnerId");
 
                     b.ToTable("MatchAnswer");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 9,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Image",
-                            PartnerId = 10,
-                            Side = 0
-                        },
-                        new
-                        {
-                            Id = 10,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Picture",
-                            PartnerId = 9,
-                            Side = 1
-                        },
-                        new
-                        {
-                            Id = 11,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Apartment",
-                            PartnerId = 12,
-                            Side = 0
-                        },
-                        new
-                        {
-                            Id = 12,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Flat",
-                            PartnerId = 11,
-                            Side = 1
-                        });
                 });
 
             modelBuilder.Entity("TestLib.Classes.Answers.TextAnswer", b =>
@@ -873,7 +836,8 @@ namespace DALTestsDB.Migrations
                     b.HasOne("TestLib.Classes.Answers.MatchAnswer", "Partner")
                         .WithMany()
                         .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Partner");
                 });

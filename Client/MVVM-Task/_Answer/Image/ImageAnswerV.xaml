@@ -8,10 +8,7 @@
              d:DataContext="{d:DesignInstance Type=local:ImageAnswerVM}"
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <TextBox Text="{Binding Path=Text}"  />
-
         <StackPanel Orientation="Horizontal">
-            <RadioButton IsChecked="{Binding IsCorrect}" VerticalAlignment="Center"/>
             <Image Source="{Binding Path=ImageSource}" Width="150" Height="150" />
         </StackPanel>
     </StackPanel>

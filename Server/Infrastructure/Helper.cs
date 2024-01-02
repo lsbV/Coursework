@@ -20,13 +20,6 @@ namespace Server.Infrastructure
             else
                 return ProgresStatus.InProgress;
         }
-        public static Answer GetNewUserAnswer(this Answer answer)
-        {
-            var newAnswer = (Answer)answer.Clone();
-            newAnswer.Id = 0;
-            answer.Task = null;
-            newAnswer.TaskId = null;
-            return newAnswer;
-        }
+
     }
 }

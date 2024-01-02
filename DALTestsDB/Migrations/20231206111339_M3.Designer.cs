@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DALTestsDB.Migrations
 {
     [DbContext(typeof(TestDBContext))]
-    [Migration("20231121161942_M3")]
+    [Migration("20231206111339_M3")]
     partial class M3
     {
         /// <inheritdoc />
@@ -255,10 +255,6 @@ namespace DALTestsDB.Migrations
 
                     b.Property<int>("BodyId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Point")
                         .HasColumnType("float");
@@ -528,46 +524,11 @@ namespace DALTestsDB.Migrations
                     b.Property<int>("Side")
                         .HasColumnType("int");
 
-                    b.HasIndex("PartnerId");
+                    b.HasIndex("PartnerId")
+                        .IsUnique()
+                        .HasFilter("[PartnerId] IS NOT NULL");
 
                     b.ToTable("MatchAnswer");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 9,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Image",
-                            PartnerId = 10,
-                            Side = 0
-                        },
-                        new
-                        {
-                            Id = 10,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Picture",
-                            PartnerId = 9,
-                            Side = 1
-                        },
-                        new
-                        {
-                            Id = 11,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Apartment",
-                            PartnerId = 12,
-                            Side = 0
-                        },
-                        new
-                        {
-                            Id = 12,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Flat",
-                            Side = 1
-                        });
                 });
 
             modelBuilder.Entity("TestLib.Classes.Answers.TextAnswer", b =>
@@ -691,7 +652,6 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 1,
                             BodyId = 1,
-                            Description = "ChooseFromListTask",
                             Point = 10.0,
                             TestId = 1
                         },
@@ -699,7 +659,6 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 2,
                             BodyId = 2,
-                            Description = "ChooseFromListTask",
                             Point = 10.0,
                             TestId = 1
                         });
@@ -716,7 +675,6 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 3,
                             BodyId = 3,
-                            Description = "MatchTask",
                             Point = 10.0,
                             TestId = 1
                         });
@@ -870,9 +828,8 @@ namespace DALTestsDB.Migrations
                         .IsRequired();
 
                     b.HasOne("TestLib.Classes.Answers.MatchAnswer", "Partner")
-                        .WithMany()
-                        .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Answers.MatchAnswer", "PartnerId");
 
                     b.Navigation("Partner");
                 });

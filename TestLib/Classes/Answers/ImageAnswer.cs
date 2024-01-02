@@ -8,16 +8,28 @@ namespace TestLib.Classes.Answers
     {
         public required string ImagePath { get; set; }
         public required int ImageLength { get; set; }
-        public override object Clone()
-        {
-            return new ImageAnswer() { Id = Id, IsCorrect = IsCorrect, TaskId = TaskId, Text = Text, Task = null, ImageLength = ImageLength, ImagePath = ImagePath };
-        }
 
         public override int CompareTo(Answer? other)
         {
-           if(this.Text == other?.Text)
+            if(other == null)
+            {
+                return 1;
+            }
+            if (other is ImageAnswer imageAnswer)
+            {
+                return this.CompareTo(imageAnswer);
+            }
+            return this.Text.CompareTo(other.Text);
+        }
+        public int CompareTo(ImageAnswer? other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            if (this.ImageLength == other.ImageLength && this.ImagePath == other.ImagePath)
                 return 0;
-            return 1;
+            return this.ImagePath.CompareTo(other.ImagePath);
         }
 
         public override Answer GetClearAnswer()

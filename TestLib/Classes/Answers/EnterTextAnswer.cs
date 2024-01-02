@@ -9,19 +9,22 @@ namespace TestLib.Classes.Answers
 {
     public class EnterTextAnswer : Answer
     {
-        public override object Clone()
-        {
-            return new EnterTextAnswer() { Id = Id, IsCorrect = IsCorrect, Text = Text, TaskId = TaskId, Task = null! };
-        }
-
         public override int CompareTo(Answer? other)
         {
-            throw new NotImplementedException();
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            if (other is not EnterTextAnswer textAnswer)
+            {
+                throw new ArgumentException("Incorrect type of answer");
+            }
+            return Text.CompareTo(textAnswer.Text);
         }
 
         public override Answer GetClearAnswer()
         {
-            throw new NotImplementedException();
+            return new EnterTextAnswer() { Id = Id, IsCorrect = false, Text = string.Empty, TaskId = TaskId, Task = null! };
         }
     }
 }

@@ -7,9 +7,9 @@ namespace TestLib.Classes.Tasks
 {
     public class ChooseFromListTask : Task
     {
-        public ChooseFromListTask(string description, double point, List<Answer> answers, Body body)
+        public ChooseFromListTask(string? description, double point, List<Answer> answers, Body body)
         {
-            Description = "Choose from list";
+            Description = description ?? "Choose from list";
             Point = point;
             Answers = answers;
             Body = body;
@@ -20,25 +20,28 @@ namespace TestLib.Classes.Tasks
             Point = 0;
         }
 
-        public object Clone()
+        /// <summary>
+        /// Get grade for this task
+        /// </summary>
+        /// <param name="userAnswers"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        public override double GetGrade(List<Answer> userAnswers)
         {
-            var answers = new List<Answer>(Answers.Select(a=>(Answer)a.Clone()));
-            return new ChooseFromListTask() { Id = Id, Answers = answers, Body = (Body)Body.Clone(), BodyId = BodyId, Description = Description, Point = Point, Test = null!, TestId = TestId};
-        }
-
-        
-        public override double GetGrade(List<Answer> answers)
-        {
-            //return Point;
-            if (answers == null)
+            if (userAnswers == null)
             {
-                throw new ArgumentNullException(nameof(answers));
+                throw new ArgumentNullException(nameof(userAnswers));
             }
-            if (answers.Count() != 1)
+            if (userAnswers.Count != 1)
             {
+                if (userAnswers.Count == 0)
+                {
+                    return 0;
+                }
                 throw new ArgumentException("ChooseFromListTask can have only one answer");
             }
-            if (Answers.Single(a => a.IsCorrect).Text == answers.Single().Text)
+            if (Answers.Single(a => a.IsCorrect).Text == userAnswers.Single().Text)
             {
                 return Point;
             }
@@ -47,8 +50,17 @@ namespace TestLib.Classes.Tasks
 
         public override Task GetClearTask()
         {
-            var newTask = (ChooseFromListTask)Clone();
-            newTask.Answers = new(newTask.Answers.Select(a => a.GetClearAnswer()));
+            var newTask = new ChooseFromListTask
+            {
+                Id = Id,
+                Body = (Body)Body.Clone(),
+                BodyId = BodyId,
+                Description = Description,
+                Point = Point,
+                Test = null!,
+                TestId = TestId,
+                Answers = new(this.Answers.Select(a => a.GetClearAnswer()))
+            };
             return newTask;
         }
     }

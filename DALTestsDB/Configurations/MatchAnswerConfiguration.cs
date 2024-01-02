@@ -16,13 +16,12 @@ namespace DALTestsDB.Configurations
         {
             builder.HasBaseType<Answer>();
 
-            builder.Property(e => e.Side)
-                .IsRequired();
+            builder.Property(e => e.Side).IsRequired();
 
-            builder.HasOne(e => e.Partner)
-                .WithMany()
-                .HasForeignKey(e => e.PartnerId)
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(ma => ma.Partner)
+               .WithOne()
+               .HasForeignKey<MatchAnswer>(ma => ma.PartnerId)
+               .IsRequired(false);
         }
     }
 }

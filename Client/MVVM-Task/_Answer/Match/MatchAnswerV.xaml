@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Client.MVVM_Task._Answer"
+             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=local:MatchAnswerVM}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -12,6 +13,9 @@
             <Style TargetType="Grid">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Partner}" Value="{x:Null}">
+                        <Setter Property="Grid.Background" Value="White"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Partner}" Value="{x:Type local:MatchAnswerVM}">
                         <Setter Property="Grid.Background" Value="Gray"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -28,6 +32,9 @@
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Partner}" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Partner}" Value="{x:Type local:MatchAnswerVM}">
+                            <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

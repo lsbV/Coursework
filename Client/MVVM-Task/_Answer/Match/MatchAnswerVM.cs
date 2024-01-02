@@ -30,10 +30,10 @@ namespace Client.MVVM_Task._Answer
         [RelayCommand]
         void Unjoin(object param)
         {
-            var anotherVM = (MatchAnswerVM)param;
-            if (anotherVM.Partner == null)
+            //var anotherVM = (MatchAnswerVM)param;
+            if (this.Partner != null)
             {
-                anotherVM.Partner = null;
+                Partner.Partner = null;
                 Partner = null;
             }
         }

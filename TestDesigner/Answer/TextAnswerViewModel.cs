@@ -24,7 +24,7 @@ namespace TestDesigner.Answer
 
         public override TestLib.Abstractions.Answer CreateAnswer()
         {
-            return new TextAnswer(IsCorrect, Text);
+            return new TextAnswer() { Text = Text, IsCorrect = IsCorrect };
         }
     }
 }

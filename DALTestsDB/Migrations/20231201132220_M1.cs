@@ -267,7 +267,7 @@ namespace DALTestsDB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Side = table.Column<int>(type: "int", nullable: false),
-                    PartnerId = table.Column<int>(type: "int", nullable: true)
+                    PartnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -471,9 +471,7 @@ namespace DALTestsDB.Migrations
                     { 5, false, 2, "1" },
                     { 6, false, 2, "2" },
                     { 7, false, 2, "3" },
-                    { 8, true, 2, "4" },
-                    { 9, true, 3, "Image" },
-                    { 10, true, 3, "Picture" }
+                    { 8, true, 2, "4" }
                 });
 
             migrationBuilder.InsertData(
@@ -517,11 +515,6 @@ namespace DALTestsDB.Migrations
                 values: new object[] { 2, 3993, "/Messenger-icon.png" });
 
             migrationBuilder.InsertData(
-                table: "MatchAnswer",
-                columns: new[] { "Id", "PartnerId", "Side" },
-                values: new object[] { 10, null, 1 });
-
-            migrationBuilder.InsertData(
                 table: "TextAnswer",
                 column: "Id",
                 values: new object[]
@@ -544,11 +537,6 @@ namespace DALTestsDB.Migrations
                     1,
                     3
                 });
-
-            migrationBuilder.InsertData(
-                table: "MatchAnswer",
-                columns: new[] { "Id", "PartnerId", "Side" },
-                values: new object[] { 9, 10, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Answer_TaskId",

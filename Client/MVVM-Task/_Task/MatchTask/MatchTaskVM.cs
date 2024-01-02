@@ -30,28 +30,28 @@ namespace Client.MVVM_Task._Task
             SelectedRightItem = Right.FirstOrDefault();
         }
 
-        //partial void OnSelectedLeftItemChanged(MatchAnswerVM? value)
-        //{
-        //    if (SelectedLeftItem != null && SelectedRightItem != null)
-        //    {
-        //        SelectedLeftItem.JoinCommand.Execute(SelectedRightItem);
-        //        //SelectedLeftItem.Partner = SelectedRightItem;
-        //        //SelectedRightItem.Partner = SelectedLeftItem;
-        //        SelectedLeftItem = null;
-        //        SelectedRightItem = null;
-        //    }
-        //}
-        //partial void OnSelectedRightItemChanged(MatchAnswerVM? value)
-        //{
-        //    if (SelectedLeftItem != null && SelectedRightItem != null)
-        //    {
-        //        SelectedRightItem.JoinCommand.Execute(SelectedLeftItem);
-        //        //SelectedLeftItem.Partner = SelectedRightItem;
-        //        //SelectedRightItem.Partner = SelectedLeftItem;
-        //        SelectedLeftItem = null;
-        //        SelectedRightItem = null;
-        //    }
-        //}
+        partial void OnSelectedLeftItemChanged(MatchAnswerVM? value)
+        {
+            if (SelectedLeftItem != null && SelectedRightItem != null)
+            {
+                SelectedLeftItem.JoinCommand.Execute(SelectedRightItem);
+                //SelectedLeftItem.Partner = SelectedRightItem;
+                //SelectedRightItem.Partner = SelectedLeftItem;
+                SelectedLeftItem = null;
+                SelectedRightItem = null;
+            }
+        }
+        partial void OnSelectedRightItemChanged(MatchAnswerVM? value)
+        {
+            if (SelectedLeftItem != null && SelectedRightItem != null)
+            {
+                SelectedRightItem.JoinCommand.Execute(SelectedLeftItem);
+                //SelectedLeftItem.Partner = SelectedRightItem;
+                //SelectedRightItem.Partner = SelectedLeftItem;
+                SelectedLeftItem = null;
+                SelectedRightItem = null;
+            }
+        }
 
 
 

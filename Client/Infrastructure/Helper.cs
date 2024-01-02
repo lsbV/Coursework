@@ -3,10 +3,12 @@ using Client.MVVM_Task._Body;
 using Client.MVVM_Task._Task;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Media;
 using TestLib.Abstractions;
 using TestLib.Classes.Answers;
 using TestLib.Classes.Bodies;
+using TestLib.Classes.Exceptions;
 using TestLib.Classes.Tasks;
 
 namespace Client.Infrastructure
@@ -15,41 +17,35 @@ namespace Client.Infrastructure
     {
         public static BaseBodyVM GetBodyViewModel(this Body body)
         {
-            switch (body)
+            return body switch
             {
-                case TextBody:
-                    return new TextBodyVM(body);
-                case ImageBody:
-                    return new ImageBodyVM(body);
-                default:
-                    throw new Exception("Unknown body type");
-            }
+                TextBody => new TextBodyVM(body),
+                ImageBody => new ImageBodyVM(body),
+                _ => throw new InvalidTypeException("Unknown body type"),
+            };
         }
         public static BaseAnswerVM GetAnswerViewModel(this Answer answer)
         {
-            switch (answer)
+            return answer switch
             {
-                case TextAnswer:
-                    return new TextAnswerVM(answer);
-                case ImageAnswer:
-                    return new ImageAnswerVM(answer);
-                case MatchAnswer:
-                    return new MatchAnswerVM(answer);
-                default:
-                    throw new Exception("Unknown answer type");
-            }
+                TextAnswer => new TextAnswerVM(answer),
+                ImageAnswer => new ImageAnswerVM(answer),
+                MatchAnswer => new MatchAnswerVM(answer),
+                EnterTextAnswer => new EnterTextVM(answer),
+                _ => throw new InvalidTypeException("Unknown answer type"),
+            };
         }
         public static BaseTaskVM GetTaskViewModel(this Task task)
         {
-            switch (task)
+            return task switch
             {
-                case ChooseFromListTask:
-                    return new ChooseFromListVM(task);
-                case MatchTask:
-                    return new MatchTaskVM(task);
-                default:
-                    throw new Exception("Unknown task type");
-            }
+                ChooseFromListTask => new ChooseFromListVM(task),
+                MatchTask => new MatchTaskVM(task),
+                EnterTextTask => new EnterTextTaskVM(task),
+                MultipleSelectTask => new MultipleSelectVM(task),
+
+                _ => throw new InvalidTypeException("Unknown task type"),
+            };
         }
         public static ImageSource? DownloadImage(this IFtpProvider ftpProvider, string imagePath, int imageLength)
         {

@@ -7,8 +7,8 @@ namespace TestLib
     {
         public int Id { get; set; }
         public int TestId { get; set; }
-        public ProgresStatus Status 
-        { 
+        public ProgresStatus Status
+        {
             get
             {
                 if (DateTime.Now < StartAt)
@@ -32,19 +32,18 @@ namespace TestLib
 
         public TestAssigned GetClearTestAssigned()
         {
-             return new TestAssigned()
-             {
-                 Id = Id,
-                 TestId = TestId,
-                 StartAt = StartAt,
-                 EndAt = EndAt,
-                 TimeToTake = TimeToTake,
-                 CreatedAt = CreatedAt,
-                 IsArchived = false,
-                 Test = Test.GetClearTest(),
-                 Users = null!
-             };
+            return new TestAssigned()
+            {
+                Id = Id,
+                TestId = TestId,
+                StartAt = StartAt,
+                EndAt = EndAt,
+                TimeToTake = TimeToTake,
+                CreatedAt = CreatedAt,
+                IsArchived = false,
+                Test = Test.GetClearTest(),
+                Users = null!
+            };
         }
-        //public List<UserTestResult> UserTestResults { get; set; } = default!;
     }
 }

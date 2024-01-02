@@ -1,14 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using TestLib.Classes.Tasks;
 
 namespace Client.MVVM_Task._Task
 {
     public partial class ChooseFromListVM : BaseTaskVM
-    {  
-        
+    {
+        public string GroupName { get; set; } = Guid.NewGuid().ToString();
+
         public ChooseFromListVM(TestLib.Abstractions.Task task) : base(task)
-        {            
-            
+        {
+
         }
 
         public override TestLib.Abstractions.Task GetTaskResult()

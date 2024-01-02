@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DALTestsDB.Migrations
 {
     [DbContext(typeof(TestDBContext))]
-    [Migration("20231121161711_M1")]
-    partial class M1
+    [Migration("20231206114139_M4")]
+    partial class M4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -255,10 +255,6 @@ namespace DALTestsDB.Migrations
 
                     b.Property<int>("BodyId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Point")
                         .HasColumnType("float");
@@ -504,6 +500,43 @@ namespace DALTestsDB.Migrations
                         });
                 });
 
+            modelBuilder.Entity("TestLib.Classes.Answers.EnterTextAnswer", b =>
+                {
+                    b.HasBaseType("TestLib.Abstractions.Answer");
+
+                    b.ToTable("EnterTextAnswer");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 13,
+                            IsCorrect = false,
+                            TaskId = 3,
+                            Text = "1"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            IsCorrect = false,
+                            TaskId = 3,
+                            Text = "2"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            IsCorrect = false,
+                            TaskId = 3,
+                            Text = "3"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            IsCorrect = true,
+                            TaskId = 3,
+                            Text = "4"
+                        });
+                });
+
             modelBuilder.Entity("TestLib.Classes.Answers.ImageAnswer", b =>
                 {
                     b.HasBaseType("TestLib.Abstractions.Answer");
@@ -516,6 +549,44 @@ namespace DALTestsDB.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("ImageAnswer");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 9,
+                            IsCorrect = true,
+                            TaskId = 2,
+                            Text = "",
+                            ImageLength = 20657,
+                            ImagePath = "/bird.png"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsCorrect = false,
+                            TaskId = 2,
+                            Text = "",
+                            ImageLength = 38024,
+                            ImagePath = "/cat.png"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            IsCorrect = false,
+                            TaskId = 2,
+                            Text = "",
+                            ImageLength = 38439,
+                            ImagePath = "/dog.png"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            IsCorrect = false,
+                            TaskId = 2,
+                            Text = "",
+                            ImageLength = 30455,
+                            ImagePath = "/clown-fish.png"
+                        });
                 });
 
             modelBuilder.Entity("TestLib.Classes.Answers.MatchAnswer", b =>
@@ -528,28 +599,11 @@ namespace DALTestsDB.Migrations
                     b.Property<int>("Side")
                         .HasColumnType("int");
 
-                    b.HasIndex("PartnerId");
+                    b.HasIndex("PartnerId")
+                        .IsUnique()
+                        .HasFilter("[PartnerId] IS NOT NULL");
 
                     b.ToTable("MatchAnswer");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 9,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Image",
-                            PartnerId = 10,
-                            Side = 0
-                        },
-                        new
-                        {
-                            Id = 10,
-                            IsCorrect = true,
-                            TaskId = 3,
-                            Text = "Picture",
-                            Side = 1
-                        });
                 });
 
             modelBuilder.Entity("TestLib.Classes.Answers.TextAnswer", b =>
@@ -638,6 +692,14 @@ namespace DALTestsDB.Migrations
                             Text = "",
                             ImageLength = 3993,
                             ImagePath = "/Messenger-icon.png"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            TaskId = 4,
+                            Text = "",
+                            ImageLength = 24567,
+                            ImagePath = "/forest.png"
                         });
                 });
 
@@ -652,13 +714,19 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 1,
                             TaskId = 1,
-                            Text = "2+2 ="
+                            Text = "2 + 2 ="
                         },
                         new
                         {
                             Id = 3,
                             TaskId = 3,
                             Text = "Match similar"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            TaskId = 5,
+                            Text = "3 + 1 ="
                         });
                 });
 
@@ -673,7 +741,6 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 1,
                             BodyId = 1,
-                            Description = "ChooseFromListTask",
                             Point = 10.0,
                             TestId = 1
                         },
@@ -681,7 +748,22 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 2,
                             BodyId = 2,
-                            Description = "ChooseFromListTask",
+                            Point = 10.0,
+                            TestId = 1
+                        });
+                });
+
+            modelBuilder.Entity("TestLib.Classes.Tasks.EnterTextTask", b =>
+                {
+                    b.HasBaseType("TestLib.Abstractions.Task");
+
+                    b.ToTable("EnterTextTask");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 5,
+                            BodyId = 5,
                             Point = 10.0,
                             TestId = 1
                         });
@@ -698,7 +780,22 @@ namespace DALTestsDB.Migrations
                         {
                             Id = 3,
                             BodyId = 3,
-                            Description = "MatchTask",
+                            Point = 10.0,
+                            TestId = 1
+                        });
+                });
+
+            modelBuilder.Entity("TestLib.Classes.Tasks.MultipleSelectTask", b =>
+                {
+                    b.HasBaseType("TestLib.Abstractions.Task");
+
+                    b.ToTable("MultipleSelectTask");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            BodyId = 4,
                             Point = 10.0,
                             TestId = 1
                         });
@@ -834,6 +931,15 @@ namespace DALTestsDB.Migrations
                     b.Navigation("Test");
                 });
 
+            modelBuilder.Entity("TestLib.Classes.Answers.EnterTextAnswer", b =>
+                {
+                    b.HasOne("TestLib.Abstractions.Answer", null)
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Answers.EnterTextAnswer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TestLib.Classes.Answers.ImageAnswer", b =>
                 {
                     b.HasOne("TestLib.Abstractions.Answer", null)
@@ -852,9 +958,8 @@ namespace DALTestsDB.Migrations
                         .IsRequired();
 
                     b.HasOne("TestLib.Classes.Answers.MatchAnswer", "Partner")
-                        .WithMany()
-                        .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Answers.MatchAnswer", "PartnerId");
 
                     b.Navigation("Partner");
                 });
@@ -895,11 +1000,29 @@ namespace DALTestsDB.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TestLib.Classes.Tasks.EnterTextTask", b =>
+                {
+                    b.HasOne("TestLib.Abstractions.Task", null)
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Tasks.EnterTextTask", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TestLib.Classes.Tasks.MatchTask", b =>
                 {
                     b.HasOne("TestLib.Abstractions.Task", null)
                         .WithOne()
                         .HasForeignKey("TestLib.Classes.Tasks.MatchTask", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TestLib.Classes.Tasks.MultipleSelectTask", b =>
+                {
+                    b.HasOne("TestLib.Abstractions.Task", null)
+                        .WithOne()
+                        .HasForeignKey("TestLib.Classes.Tasks.MultipleSelectTask", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

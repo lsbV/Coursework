@@ -16,7 +16,7 @@ namespace Server.Pages.Tests
     {
 
         IMessenger messenger;
-        
+
         #region ObservableProperties
         [ObservableProperty] string title = string.Empty;
         [ObservableProperty] string description = string.Empty;
@@ -75,21 +75,21 @@ namespace Server.Pages.Tests
             }
             using var ouw = DI.Create<IGenericUnitOfWork>();
             var repo = ouw.Repository<Test>();
-            var test = InitTest(Test!);
+            var newTest = InitTest(Test!);
             if (ViewMode == ViewMode.Create)
             {
                 await repo.AddAsync(Test!);
             }
-            else if(ViewMode == ViewMode.Edit)
+            else if (ViewMode == ViewMode.Edit)
             {
-                await repo.UpdateAsync(test);
+                await repo.UpdateAsync(newTest);
             }
         }
 
         [RelayCommand]
         private void Cancel(object param)
         {
-            
+
         }
 
         [RelayCommand]
@@ -141,7 +141,7 @@ namespace Server.Pages.Tests
         }
         private bool CanLoad()
         {
-            if(Test == null)
+            if (Test == null)
             {
                 return true;
             }
@@ -149,7 +149,7 @@ namespace Server.Pages.Tests
         }
         private bool CanSave()
         {
-            if(Test == null)
+            if (Test == null)
             {
                 return false;
             }
